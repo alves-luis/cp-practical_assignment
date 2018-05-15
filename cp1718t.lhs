@@ -105,13 +105,13 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 17
 \\\hline
-a11111 & Nome1 (preencher)
+a82136 & José Costa
 \\
-a22222 & Nome2 (preencher)
+a80165 & Luís Alves
 \\
-a33333 & Nome3 (preencher)
+a81909 & Miguel Carvalho
 \end{tabular}
 \end{center}
 
@@ -974,12 +974,25 @@ outras funções auxiliares que sejam necessárias.
 \subsection*{Problema 1}
 
 \begin{code}
-inBlockchain = undefined
+inBlockchain :: Either Block (Block, Blockchain) -> Blockchain
+inBlockchain Left b = Bc b
+inBlockchain Right (b,bc) = Bcs (b,bc)
+outBlockchain :: Blockchain -> Either Block (Block, Blockchain)
 outBlockchain = undefined
+outBlockchain = either (Bc) (Bcs)
+recBlockchain :: (c -> d) -> Either b1 (b2, c) -> Either b1 (b2, d)
 recBlockchain = undefined
+cataBlockchain :: (Either Block (Block, d) -> d) -> Blockchain -> d
 cataBlockchain = undefined
+anaBlockchain :: (c -> Either Block (Block, c)) -> c -> Blockchain
 anaBlockchain = undefined
+hyloBlockchain :: (Either Block (Block, c1) -> c1) -> (c2 -> Either Block (Block, c2)) -> c2 -> c1
 hyloBlockchain = undefined
+
+
+
+
+
 
 allTransactions = undefined
 ledger = undefined
