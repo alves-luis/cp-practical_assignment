@@ -975,27 +975,33 @@ outras funções auxiliares que sejam necessárias.
 
 \begin{code}
 -- inBlockchain :: Either Block (Block, Blockchain) -> Blockchain
-inBlockchain (Left b)  = Bc b
-inBlockchain (Right (b,bs)) = Bcs (b,bs)
+inBlockchain = either Bc Bcs
 -- outBlockchain :: Blockchain -> Either Block (Block, Blockchain)
 outBlockchain (Bc b) = Left b
-outBlockchain (Bcs (b,bs)) = Right (b,bs) 
+outBlockchain (Bcs (b,bs)) = Right (b,bs)
 -- recBlockchain :: (c -> d) -> Either b1 (b2, c) -> Either b1 (b2, d)
-recBlockchain = undefined
+recBlockchain f (Left b1) = Left b1
+recBlockchain f (Right (b2,c)) = Right (b2, f c)
 -- cataBlockchain :: (Either Block (Block, d) -> d) -> Blockchain -> d
-cataBlockchain = undefined
+cataBlockchain g = g . recBlockchain (cataBlockchain g) . outBlockchain
 -- anaBlockchain :: (c -> Either Block (Block, c)) -> c -> Blockchain
-anaBlockchain = undefined
+anaBlockchain g = inBlockchain . recBlockchain (anaBlockchain g) . g
 -- hyloBlockchain :: (Either Block (Block, c1) -> c1) -> (c2 -> Either Block (Block, c2)) -> c2 -> c1
-hyloBlockchain = undefined
+hyloBlockchain h g = cataBlockchain h . anaBlockchain g
 
 
 
 
 
+-- allTransactions :: Blockchain -> Transactions
+allTransactions bc = (cataBlockchain g bc) where
+  g :: Either Block (Block,Transactions) -> Transactions
+  g (Left b) = p2 (p2 b)
+  g (Right (b,t)) = (p2 (p2 b)) ++ t
 
-allTransactions = undefined
+-- ledger :: Blockchain -> Ledger
 ledger = undefined
+
 isValidMagicNr = undefined
 \end{code}
 
