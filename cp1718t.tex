@@ -295,13 +295,13 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 17
 \\\hline
-a11111 & Nome1 (preencher)	
+a82136 & José Costa
 \\
-a22222 & Nome2 (preencher)	
+a80165 & Luís Alves
 \\
-a33333 & Nome3 (preencher)	
+a81909 & Miguel Carvalho
 \end{tabular}
 \end{center}
 
@@ -313,10 +313,10 @@ parte-se de um repertório de \emph{combinadores} que formam uma álgebra da
 programação (conjunto de leis universais e seus corolários) e usam-se esses
 combinadores para construir programas \emph{composicionalmente}, isto é,
 agregando programas já existentes.
-  
+
 Na sequência pedagógica dos planos de estudo dos dois cursos que têm esta
 disciplina, restringe-se a aplicação deste método à programação funcional
-em \Haskell. Assim, 
+em \Haskell. Assim,
 o presente trabalho prático coloca os alunos perante problemas
 concretos que deverão ser implementados em \Haskell.
 Há ainda um outro objectivo: o de ensinar a documentar programas e
@@ -399,7 +399,7 @@ Para testar uma propriedade \QuickCheck~\ensuremath{\Varid{prop}}, basta invocá
 
 \section*{Problema 1}
 
-Segundo uma \href{https://www.jn.pt/economia/interior/compra-diaria-de-bitcoins-iguala-acoes-da-apple-9257302.html}{notícia do Jornal de Notícias}, 
+Segundo uma \href{https://www.jn.pt/economia/interior/compra-diaria-de-bitcoins-iguala-acoes-da-apple-9257302.html}{notícia do Jornal de Notícias},
 referente ao dia 12 de abril, \emph{``apenas numa hora, foram transacionadas 1.2 mil milhões de dólares em bitcoins. Nas últimas 24 horas, foram transacionados 8,5 mil milhões de dólares, num total de 24 mil milhões de dólares referentes às principais criptomoedas''}.
 
 De facto, é inquestionável que as criptomoedas, e em particular as bitcoin, vieram para ficar.
@@ -432,7 +432,7 @@ tal como no código seguinte:
 \ColumnHook
 \end{hscode}\resethooks
 
-Cada \href{https://en.bitcoin.it/wiki/Transaction}{transação} 
+Cada \href{https://en.bitcoin.it/wiki/Transaction}{transação}
 define a entidade de origem da transferência, o valor a ser transacionado,
 e a entidade destino (por esta ordem), tal como se define de seguida.
 
@@ -797,7 +797,7 @@ Esta questão aborda operações de processamento de imagens utilizando quadtree
 \ColumnHook
 \end{hscode}\resethooks
 \end{propriedade}
-    
+
     \item Defina a função \ensuremath{\Varid{compressQTree}\mathbin{::}\Conid{Int}\to \Conid{QTree}\;\Varid{a}\to \Conid{QTree}\;\Varid{a}}, utilizando catamorfismos e/ou anamorfismos, que comprime uma quadtree cortando folhas da árvore para reduzir a sua profundidade num dado número de níveis.
     Tente produzir imagens similares (mas não necessariamente iguais) às Figuras~\ref{fig:person1}, \ref{fig:person2}, \ref{fig:person3} e \ref{fig:person4}:
         \begin{tabbing}\ttfamily
@@ -815,7 +815,7 @@ Esta questão aborda operações de processamento de imagens utilizando quadtree
 \ColumnHook
 \end{hscode}\resethooks
     \end{propriedade}
-    
+
 
     \item Defina a função \ensuremath{\Varid{outlineQTree}\mathbin{::}(\Varid{a}\to \Conid{Bool})\to \Conid{QTree}\;\Varid{a}\to \Conid{Matrix}\;\Conid{Bool}}, utilizando catamorfismos e/ou anamorfismos, que recebe uma função que determina quais os píxeis de fundo e converte uma quadtree numa matriz monocromática, de forma a desenhar o contorno de uma \href{https://en.wikipedia.org/wiki/Polygon_mesh}{malha poligonal} contida na imagem.
         Tente produzir imagens similares (mas não necessariamente iguais) às Figuras~\ref{fig:personOut1} e \ref{fig:personOut2}:
@@ -848,7 +848,7 @@ Esta questão aborda operações de processamento de imagens utilizando quadtree
 O cálculo das combinações de \ensuremath{\Varid{n}} \ensuremath{\Varid{k}}-a-\ensuremath{\Varid{k}},
 \begin{eqnarray}
 	\ensuremath{\Big(\vcenter{\xymatrix@R=1pt{\Varid{n}\\\Varid{k}}}\Big)\mathrel{=}\frac{{\Varid{n}!}}{{\Varid{k}!}\mathbin{*}{(\Varid{n}\mathbin{-}\Varid{k})!}}}
-	\label{eq:bin} 
+	\label{eq:bin}
 \end{eqnarray}
 envolve três factoriais. Recorrendo à \material{lei de recursividade múltipla} do cálculo
 de programas, é possível escrever o mesmo programa como um simples ciclo-for
@@ -864,7 +864,7 @@ onde
 \more
        \ensuremath{\Varid{f}\;\Varid{k}\;\Varid{d}\mathrel{=}\frac{{(\Varid{d}\mathbin{+}\Varid{k})!}}{{\Varid{k}!}}}
 \more
-       \ensuremath{\Varid{g}\;\Varid{d}\mathrel{=}{\Varid{d}!}} 
+       \ensuremath{\Varid{g}\;\Varid{d}\mathrel{=}{\Varid{d}!}}
 \end{eqnarray*}
 assumindo-se \ensuremath{\Varid{d}\mathrel{=}\Varid{n}\mathbin{-}\Varid{k}\geq \mathrm{0}}.
 %
@@ -881,7 +881,7 @@ assumindo-se \ensuremath{\Varid{d}\mathrel{=}\Varid{n}\mathbin{-}\Varid{k}\geq \
 \>[B]{}\Varid{l}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{l}\;\Varid{k}\;\Varid{d}\mathbin{+}\mathrm{1}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-e 
+e
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -891,7 +891,7 @@ e
 \\[\blanklineskip]%
 \>[B]{}\Varid{s}\;\mathrm{0}\mathrel{=}\mathrm{1}{}\<[E]%
 \\
-\>[B]{}\Varid{s}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{s}\;\Varid{n}\mathbin{+}\mathrm{1}{}\<[E]%
+\>[B]{}\Varid{s}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{s}\;\Varid{d}\mathbin{+}\mathrm{1}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 A partir daqui alguém derivou a seguinte implementação:
@@ -912,7 +912,7 @@ Verificação que \ensuremath{\Big(\vcenter{\xymatrix@R=1pt{\Varid{n}\\\Varid{k}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{prop3}\;\Varid{n}\;\Varid{k}\mathrel{=}\Big(\vcenter{\xymatrix@R=1pt{\Varid{n}\\\Varid{k}}}\Big)\equiv {\Varid{n}!}\mathbin{/}({\Varid{k}!}\mathbin{*}{(\Varid{n}\mathbin{-}\Varid{k})!}){}\<[E]%
+\>[B]{}\Varid{prop3}\;(\Conid{NonNegative}\;\Varid{n})\;(\Conid{NonNegative}\;\Varid{k})\mathrel{=}\Varid{k}\leq \Varid{n}\Rightarrow\Big(\vcenter{\xymatrix@R=1pt{\Varid{n}\\\Varid{k}}}\Big)\equiv {\Varid{n}!}\mathbin{/}({\Varid{k}!}\mathbin{*}{(\Varid{n}\mathbin{-}\Varid{k})!}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 \end{propriedade}
@@ -973,7 +973,7 @@ Uma árvore de Pitágoras pode ser codificada em Haskell como uma full tree cont
 ~~~~~\char62{}~animatePTree~3
 \end{tabbing}
 
-    
+
 \end{enumerate}
 
 \section*{Problema 5}
@@ -1094,7 +1094,7 @@ Partindo da seguinte declaração de \ensuremath{\Conid{Bag}} como um functor e 
 \ColumnHook
 \end{hscode}\resethooks
 \begin{enumerate}
-\item	
+\item
 Defina a função \ensuremath{\mu } (multiplicação do mónade \ensuremath{\Conid{Bag}}) e a função auxiliar
 \ensuremath{\Varid{singletonbag}}.
 \item	Verifique-as com os seguintes testes unitários:
@@ -1297,30 +1297,44 @@ Outras funções auxiliares:
 \section{Soluções dos alunos}\label{sec:resolucao}
 Os alunos devem colocar neste anexo as suas soluções aos exercícios
 propostos, de acordo com o ``layout'' que se fornece. Não podem ser
-alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou 
+alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou
 outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{inBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{inBlockchain}\mathrel{=}\alt{\Conid{Bc}}{\Conid{Bcs}}{}\<[E]%
 \\
-\>[B]{}\Varid{outBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outBlockchain}\;(\Conid{Bc}\;\Varid{b})\mathrel{=}i_1\;\Varid{b}{}\<[E]%
 \\
-\>[B]{}\Varid{recBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outBlockchain}\;(\Conid{Bcs}\;(\Varid{b},\Varid{bs}))\mathrel{=}i_2\;(\Varid{b},\Varid{bs}){}\<[E]%
 \\
-\>[B]{}\Varid{cataBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{recBlockchain}\;\Varid{f}\;(i_1\;\Varid{b1})\mathrel{=}i_1\;\Varid{b1}{}\<[E]%
 \\
-\>[B]{}\Varid{anaBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{recBlockchain}\;\Varid{f}\;(i_2\;(\Varid{b2},\Varid{c}))\mathrel{=}i_2\;(\Varid{b2},\Varid{f}\;\Varid{c}){}\<[E]%
 \\
-\>[B]{}\Varid{hyloBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{cataBlockchain}\;\Varid{g}\mathrel{=}\Varid{g}\comp \Varid{recBlockchain}\;(\Varid{cataBlockchain}\;\Varid{g})\comp \Varid{outBlockchain}{}\<[E]%
+\\
+\>[B]{}\Varid{anaBlockchain}\;\Varid{g}\mathrel{=}\Varid{inBlockchain}\comp \Varid{recBlockchain}\;(\Varid{anaBlockchain}\;\Varid{g})\comp \Varid{g}{}\<[E]%
+\\
+\>[B]{}\Varid{hyloBlockchain}\;\Varid{h}\;\Varid{g}\mathrel{=}\Varid{cataBlockchain}\;\Varid{h}\comp \Varid{anaBlockchain}\;\Varid{g}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{allTransactions}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{allTransactions}\;\Varid{bc}\mathrel{=}(\Varid{cataBlockchain}\;\Varid{g}\;\Varid{bc})\;\mathbf{where}{}\<[E]%
 \\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\mathbin{::}\Conid{Block}+(\Conid{Block},\Conid{Transactions})\to \Conid{Transactions}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_1\;\Varid{b})\mathrel{=}(\p2\comp \p2)\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_2\;(\Varid{b},\Varid{t}))\mathrel{=}(\p2\comp \p2)\;\Varid{b}\plus \Varid{t}{}\<[E]%
+\\[\blanklineskip]%
 \>[B]{}\Varid{ledger}\mathrel{=}\bot {}\<[E]%
-\\
+\\[\blanklineskip]%
 \>[B]{}\Varid{isValidMagicNr}\mathrel{=}\bot {}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
@@ -1419,7 +1433,7 @@ outras funções auxiliares que sejam necessárias.
 \end{hscode}\resethooks
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
-Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.} 
+Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.}
 \begin{eqnarray*}
 \start
 	\ensuremath{\Varid{id}\mathrel{=}\conj{\Varid{f}}{\Varid{g}}}
@@ -1434,8 +1448,8 @@ Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tira
 \qed
 \end{eqnarray*}
 
-Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\ 
-\href{https://ctan.org/pkg/xymatrix}{xymatrix}, por exemplo: 
+Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
+\href{https://ctan.org/pkg/xymatrix}{xymatrix}, por exemplo:
 \begin{eqnarray*}
 \xymatrix@C=2cm{
     \ensuremath{\N_0}
@@ -1464,4 +1478,3 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
 %----------------- Fim do documento -------------------------------------------%
 
 \end{document}
-

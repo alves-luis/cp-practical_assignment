@@ -974,32 +974,20 @@ outras funções auxiliares que sejam necessárias.
 \subsection*{Problema 1}
 
 \begin{code}
--- inBlockchain :: Either Block (Block, Blockchain) -> Blockchain
 inBlockchain = either Bc Bcs
--- outBlockchain :: Blockchain -> Either Block (Block, Blockchain)
 outBlockchain (Bc b) = Left b
 outBlockchain (Bcs (b,bs)) = Right (b,bs)
--- recBlockchain :: (c -> d) -> Either b1 (b2, c) -> Either b1 (b2, d)
 recBlockchain f (Left b1) = Left b1
 recBlockchain f (Right (b2,c)) = Right (b2, f c)
--- cataBlockchain :: (Either Block (Block, d) -> d) -> Blockchain -> d
 cataBlockchain g = g . recBlockchain (cataBlockchain g) . outBlockchain
--- anaBlockchain :: (c -> Either Block (Block, c)) -> c -> Blockchain
 anaBlockchain g = inBlockchain . recBlockchain (anaBlockchain g) . g
--- hyloBlockchain :: (Either Block (Block, c1) -> c1) -> (c2 -> Either Block (Block, c2)) -> c2 -> c1
 hyloBlockchain h g = cataBlockchain h . anaBlockchain g
 
-
-
-
-
--- allTransactions :: Blockchain -> Transactions
 allTransactions bc = (cataBlockchain g bc) where
   g :: Either Block (Block,Transactions) -> Transactions
-  g (Left b) = p2 (p2 b)
-  g (Right (b,t)) = (p2 (p2 b)) ++ t
+  g (Left b) = (p2 . p2) b
+  g (Right (b,t)) = (p2 . p2) b ++ t
 
--- ledger :: Blockchain -> Ledger
 ledger = undefined
 
 isValidMagicNr = undefined
