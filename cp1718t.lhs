@@ -988,9 +988,31 @@ allTransactions bc = (cataBlockchain g bc) where
   g (Left b) = (p2 . p2) b
   g (Right (b,t)) = (p2 . p2) b ++ t
 
-ledger = undefined
+ledger bc = cataList g3 (sort (cataBlockchain g1 bc)) where
+  g1 :: Either Block (Block,Ledger) -> Ledger
+  g1 (Left b) = cataList g2 ((p2 . p2) b)
+  g1 (Right (b,t)) = cataList g2 ((p2 . p2) b) ++ t
 
-isValidMagicNr = undefined
+  g2 :: Either () (Transaction,Ledger) -> Ledger
+  g2 (Left b) = []
+  g2 (Right (b,t)) = (p1 b,- (p1(p2 b))):(p2(p2 b),(p1(p2 b))):t
+
+  g3 :: Either () ((Entity,Value),Ledger) -> Ledger
+  g3 (Left b) = []
+  g3 (Right ((e,v),l)) | l == [] = [(e,v)]
+                       | otherwise = if (p1(head l) == e) then (e,p2(head l)+v):(tail l) else (e,v):l
+
+isValidMagicNr bc = length listMagicNo <= length (cataList g2 listMagicNo)  where
+  listMagicNo = cataBlockchain g1 bc
+
+  g1 :: Either Block (Block,[MagicNo]) -> [MagicNo]
+  g1 (Left b) = [p1 b]
+  g1 (Right (b,l)) = (p1 b):l
+
+  g2 :: Either () (MagicNo,[MagicNo]) -> [MagicNo]
+  g2 (Left b) = []
+  g2 (Right (n,l)) = if elem n l then l else n:l
+
 \end{code}
 
 

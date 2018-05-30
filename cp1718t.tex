@@ -1305,6 +1305,8 @@ outras funções auxiliares que sejam necessárias.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{77}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inBlockchain}\mathrel{=}\alt{\Conid{Bc}}{\Conid{Bcs}}{}\<[E]%
 \\
@@ -1333,9 +1335,61 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{g}\;(i_2\;(\Varid{b},\Varid{t}))\mathrel{=}(\p2\comp \p2)\;\Varid{b}\plus \Varid{t}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{ledger}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{ledger}\;\Varid{bc}\mathrel{=}\Varid{cataList}\;\Varid{g3}\;(\Varid{sort}\;(\Varid{cataBlockchain}\;\Varid{g1}\;\Varid{bc}))\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g1}\mathbin{::}\Conid{Block}+(\Conid{Block},\Conid{Ledger})\to \Conid{Ledger}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g1}\;(i_1\;\Varid{b})\mathrel{=}\Varid{cataList}\;\Varid{g2}\;((\p2\comp \p2)\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g1}\;(i_2\;(\Varid{b},\Varid{t}))\mathrel{=}\Varid{cataList}\;\Varid{g2}\;((\p2\comp \p2)\;\Varid{b})\plus \Varid{t}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{isValidMagicNr}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g2}\mathbin{::}()+(\Conid{Transaction},\Conid{Ledger})\to \Conid{Ledger}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g2}\;(i_1\;\Varid{b})\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g2}\;(i_2\;(\Varid{b},\Varid{t}))\mathrel{=}(\p1\;\Varid{b},\mathbin{-}(\p1\;(\p2\;\Varid{b})))\mathbin{:}(\p2\;(\p2\;\Varid{b}),(\p1\;(\p2\;\Varid{b})))\mathbin{:}\Varid{t}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g3}\mathbin{::}()+((\Conid{Entity},\Conid{Value}),\Conid{Ledger})\to \Conid{Ledger}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g3}\;(i_1\;\Varid{b})\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g3}\;(i_2\;((\Varid{e},\Varid{v}),\Varid{l}))\mid \Varid{l}\equiv [\mskip1.5mu \mskip1.5mu]\mathrel{=}[\mskip1.5mu (\Varid{e},\Varid{v})\mskip1.5mu]{}\<[E]%
+\\
+\>[3]{}\hsindent{21}{}\<[24]%
+\>[24]{}\mid \Varid{otherwise}\mathrel{=}\mathbf{if}\;(\p1\;(\Varid{head}\;\Varid{l})\equiv \Varid{e})\;\mathbf{then}\;(\Varid{e},\p2\;(\Varid{head}\;\Varid{l})\mathbin{+}\Varid{v})\mathbin{:}(\Varid{tail}\;\Varid{l})\;\mathbf{else}\;(\Varid{e},\Varid{v})\mathbin{:}\Varid{l}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{isValidMagicNr}\;\Varid{bc}\mathrel{=}\length \;\Varid{listMagicNo}\leq \length \;(\Varid{cataList}\;\Varid{g2}\;\Varid{listMagicNo})\;{}\<[77]%
+\>[77]{}\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{listMagicNo}\mathrel{=}\Varid{cataBlockchain}\;\Varid{g1}\;\Varid{bc}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g1}\mathbin{::}\Conid{Block}+(\Conid{Block},[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu])\to [\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g1}\;(i_1\;\Varid{b})\mathrel{=}[\mskip1.5mu \p1\;\Varid{b}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g1}\;(i_2\;(\Varid{b},\Varid{l}))\mathrel{=}(\p1\;\Varid{b})\mathbin{:}\Varid{l}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g2}\mathbin{::}()+(\Conid{MagicNo},[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu])\to [\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g2}\;(i_1\;\Varid{b})\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g2}\;(i_2\;(\Varid{n},\Varid{l}))\mathrel{=}\mathbf{if}\;\Varid{elem}\;\Varid{n}\;\Varid{l}\;\mathbf{then}\;\Varid{l}\;\mathbf{else}\;\Varid{n}\mathbin{:}\Varid{l}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
