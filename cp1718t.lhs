@@ -1019,16 +1019,20 @@ isValidMagicNr bc = length listMagicNo <= length (cataList g2 listMagicNo)  wher
 \subsection*{Problema 2}
 
 \begin{code}
-inQTree = undefined
-outQTree = undefined
-baseQTree = undefined
-recQTree = undefined
-cataQTree = undefined
-anaQTree = undefined
-hyloQTree = undefined
+inQTree (Left (a,(b,c))) = Cell a b c
+inQTree (Right (a, (b, (c,d)))) = Block a b c d
+outQTree (Cell a b c) = Left (a,(b,c))
+outQTree (Block a b c d) = Right (a,(b,(c,d)))
+baseQTree f g (Left (a,b)) = Left (f a,b)
+baseQTree f g (Right (a,(b,(c,d)))) = Right (g a,(g b,(g c,g d)))
+recQTree f (Left (a,b)) = Left (a,b)
+recQTree f (Right (a,(b,(c,d)))) = Right (f a,(f b,(f c,f d)))
+cataQTree g = g . recQTree (cataQTree g) . outQTree
+anaQTree g = inQTree . recQTree (anaQTree g) . g
+hyloQTree h g = cataQTree h . anaQTree g
 
 instance Functor QTree where
-    fmap = undefined
+    fmap = undefined 
 
 rotateQTree = undefined
 scaleQTree = undefined
@@ -1048,7 +1052,8 @@ loop = undefined
 
 \begin{code}
 inFTree = undefined
-outFTree = undefined
+outFTree (Unit b) = Left b
+outFTree (Comp a b c) = undefined
 baseFTree = undefined
 recFTree = undefined
 cataFTree = undefined
