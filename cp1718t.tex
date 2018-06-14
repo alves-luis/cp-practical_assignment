@@ -1425,7 +1425,10 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\mathbf{instance}\;\Conid{Functor}\;\Conid{QTree}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathsf{fmap}\mathrel{=}\bot {}\<[E]%
+\>[5]{}\mathsf{fmap}\;\Varid{f}\;(\Conid{Cell}\;\Varid{a}\;\Varid{b}\;\Varid{c})\mathrel{=}\Conid{Cell}\;(\Varid{f}\;\Varid{a})\;\Varid{b}\;\Varid{c}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathsf{fmap}\;\Varid{f}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}\Conid{Block}\;(\mathsf{fmap}\;\Varid{f}\;\Varid{a})\;(\mathsf{fmap}\;\Varid{f}\;\Varid{b})\;(\mathsf{fmap}\;\Varid{f}\;\Varid{c})\;(\mathsf{fmap}\;\Varid{f}\;\Varid{d}){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{rotateQTree}\mathrel{=}\bot {}\<[E]%
 \\
