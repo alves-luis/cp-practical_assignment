@@ -1032,7 +1032,8 @@ anaQTree g = inQTree . recQTree (anaQTree g) . g
 hyloQTree h g = cataQTree h . anaQTree g
 
 instance Functor QTree where
-    fmap = undefined 
+    fmap f (Cell a b c) = Cell (f a) b c
+    fmap f (Block a b c d) = Block (fmap f a) (fmap f b) (fmap f c) (fmap f d)
 
 rotateQTree = undefined
 scaleQTree = undefined
