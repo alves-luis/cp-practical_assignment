@@ -1038,7 +1038,7 @@ instance Functor QTree where
 rotateQTree t = cataQTree g t where
   g :: Either (b, (Int, Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
   g (Left (a,(b,c))) = inQTree (Left (a,swap(b,c)))
-  g (Right (a,(b,(c,d)))) = undefined
+  g (Right (a,(b,(c,d)))) = Block c a d b
 scaleQTree s t = cataQTree g t where
   g :: Either (b, (Int, Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
   g (Left (a,(x,y))) = Cell a (x*s) (y*s)
