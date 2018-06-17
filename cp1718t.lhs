@@ -1035,9 +1035,18 @@ instance Functor QTree where
     fmap f (Cell a b c) = Cell (f a) b c
     fmap f (Block a b c d) = Block (fmap f a) (fmap f b) (fmap f c) (fmap f d)
 
-rotateQTree = undefined
-scaleQTree = undefined
-invertQTree = undefined
+rotateQTree t = cataQTree g t where
+  g :: Either (b, (Int, Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
+  g (Left (a,(b,c))) = inQTree (Left (a,swap(b,c)))
+  g (Right (a,(b,(c,d)))) = undefined
+scaleQTree s t = cataQTree g t where
+  g :: Either (b, (Int, Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
+  g (Left (a,(x,y))) = Cell a (x*s) (y*s)
+  g (Right (a,(b,(c,d)))) = Block a b c d
+invertQTree = cataQTree g where
+  g :: Either (PixelRGBA8, (Int,Int)) (QTree PixelRGBA8, (QTree PixelRGBA8, (QTree PixelRGBA8, QTree PixelRGBA8))) -> QTree PixelRGBA8
+  g (Left (PixelRGBA8 r g b a,(x,y))) = Cell (PixelRGBA8 (255-r) (255-g) (255-b) a) x y
+  g (Right (a,(b,(c,d)))) = Block a b c d
 compressQTree = undefined
 outlineQTree = undefined
 \end{code}

@@ -1398,6 +1398,7 @@ outras funções auxiliares que sejam necessárias.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inQTree}\;(i_1\;(\Varid{a},(\Varid{b},\Varid{c})))\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{b}\;\Varid{c}{}\<[E]%
@@ -1430,11 +1431,38 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathsf{fmap}\;\Varid{f}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}\Conid{Block}\;(\mathsf{fmap}\;\Varid{f}\;\Varid{a})\;(\mathsf{fmap}\;\Varid{f}\;\Varid{b})\;(\mathsf{fmap}\;\Varid{f}\;\Varid{c})\;(\mathsf{fmap}\;\Varid{f}\;\Varid{d}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{rotateQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{rotateQTree}\;\Varid{t}\mathrel{=}\Varid{cataQTree}\;\Varid{g}\;\Varid{t}\;\mathbf{where}{}\<[E]%
 \\
-\>[B]{}\Varid{scaleQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\mathbin{::}(\Varid{b},(\Conid{Int},\Conid{Int}))+(\Conid{QTree}\;\Varid{b},(\Conid{QTree}\;\Varid{b},(\Conid{QTree}\;\Varid{b},\Conid{QTree}\;\Varid{b})))\to \Conid{QTree}\;\Varid{b}{}\<[E]%
 \\
-\>[B]{}\Varid{invertQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_1\;(\Varid{a},(\Varid{b},\Varid{c})))\mathrel{=}\Varid{inQTree}\;(i_1\;(\Varid{a},\Varid{swap}\;(\Varid{b},\Varid{c}))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_2\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d}))))\mathrel{=}\bot {}\<[E]%
+\\
+\>[B]{}\Varid{scaleQTree}\;\Varid{s}\;\Varid{t}\mathrel{=}\Varid{cataQTree}\;\Varid{g}\;\Varid{t}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\mathbin{::}(\Varid{b},(\Conid{Int},\Conid{Int}))+(\Conid{QTree}\;\Varid{b},(\Conid{QTree}\;\Varid{b},(\Conid{QTree}\;\Varid{b},\Conid{QTree}\;\Varid{b})))\to \Conid{QTree}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_1\;(\Varid{a},(\Varid{x},\Varid{y})))\mathrel{=}\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{*}\Varid{s})\;(\Varid{y}\mathbin{*}\Varid{s}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_2\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d}))))\mathrel{=}\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}{}\<[E]%
+\\
+\>[B]{}\Varid{invertQTree}\mathrel{=}\Varid{cataQTree}\;\Varid{g}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\mathbin{::}(\Conid{PixelRGBA8},(\Conid{Int},\Conid{Int}))+(\Conid{QTree}\;\Conid{PixelRGBA8},(\Conid{QTree}\;\Conid{PixelRGBA8},(\Conid{QTree}\;\Conid{PixelRGBA8},\Conid{QTree}\;\Conid{PixelRGBA8})))\to \Conid{QTree}\;\Conid{PixelRGBA8}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_1\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a},(\Varid{x},\Varid{y})))\mathrel{=}\Conid{Cell}\;(\Conid{PixelRGBA8}\;(\mathrm{255}\mathbin{-}\Varid{r})\;(\mathrm{255}\mathbin{-}\Varid{g})\;(\mathrm{255}\mathbin{-}\Varid{b})\;\Varid{a})\;\Varid{x}\;\Varid{y}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_2\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d}))))\mathrel{=}\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}{}\<[E]%
 \\
 \>[B]{}\Varid{compressQTree}\mathrel{=}\bot {}\<[E]%
 \\
