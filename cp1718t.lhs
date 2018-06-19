@@ -1037,7 +1037,7 @@ instance Functor QTree where
 
 rotateQTree t = cataQTree g t where
   g :: Either (b, (Int, Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
-  g (Left (a,(b,c))) = inQTree (Left (a,swap(b,c)))
+  g (Left (a,p)) = inQTree (Left (a,swap p))
   g (Right (a,(b,(c,d)))) = Block c a d b
 scaleQTree s t = cataQTree g t where
   g :: Either (b, (Int, Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
@@ -1047,15 +1047,38 @@ invertQTree = cataQTree g where
   g :: Either (PixelRGBA8, (Int,Int)) (QTree PixelRGBA8, (QTree PixelRGBA8, (QTree PixelRGBA8, QTree PixelRGBA8))) -> QTree PixelRGBA8
   g (Left (PixelRGBA8 r g b a,(x,y))) = Cell (PixelRGBA8 (255-r) (255-g) (255-b) a) x y
   g (Right (a,(b,(c,d)))) = Block a b c d
-compressQTree = undefined
-outlineQTree = undefined
+compressQTree rate tree = cataQTree g1 tree where
+  g1 :: Either (b, (Int,Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
+  g1 (Left (a,(x,y))) =undefined
+
+outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
+  g1 :: Either (Bool, (Int, Int)) (QTree Bool, (QTree Bool, (QTree Bool, QTree Bool))) -> QTree Bool
+  g1 (Left (a,(x,y))) = if a then part (qt2bm (Cell a x y)) else Cell a x y
+  g1 (Right (a,(b,(c,d)))) = Block a b c d
+
+  part :: Matrix Bool -> QTree Bool
+  part m = bm2qt $ mapPos (\(r,c) a -> if (r == 1 || r == nrows m) || (c == 1 || c == ncols m) then True else False) m
+
+
+
 \end{code}
 
 \subsection*{Problema 3}
 
 \begin{code}
-base = undefined
-loop = undefined
+{-f k 0 = 1
+f k d = (l k (d-1)) * (f k (d-1))
+
+l k 0 = k + 1
+l k d = l k (d-1) + 1
+
+l2 k d = cataNat g d where
+  g :: (Either () Integer -> Integer)
+  g (Left d) = k + 1
+  g (Right d) = d + 1
+-}
+base k = undefined --split (split one one) (split one (succ k))
+loop = undefined --split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))
 \end{code}
 
 \subsection*{Problema 4}
