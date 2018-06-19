@@ -1097,7 +1097,8 @@ anaFTree f = inFTree . (recFTree (anaFTree f) ) . f
 hyloFTree a c = cataFTree a . anaFTree c
 
 instance Bifunctor FTree where
-    bmap f g = cataFTree ( inFTree . baseFTree g f id )
+    bimap f g (Unit b) =  Unit (g b)
+    bimap f g (Comp a b c) = Comp (f a) (bimap f g b) (bimap f g c)
 
 
 generatePTree = undefined
