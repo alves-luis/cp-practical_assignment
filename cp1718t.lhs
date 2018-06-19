@@ -1047,9 +1047,7 @@ invertQTree = cataQTree g where
   g :: Either (PixelRGBA8, (Int,Int)) (QTree PixelRGBA8, (QTree PixelRGBA8, (QTree PixelRGBA8, QTree PixelRGBA8))) -> QTree PixelRGBA8
   g (Left (PixelRGBA8 r g b a,(x,y))) = Cell (PixelRGBA8 (255-r) (255-g) (255-b) a) x y
   g (Right (a,(b,(c,d)))) = Block a b c d
-compressQTree rate tree = cataQTree g1 tree where
-  g1 :: Either (b, (Int,Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
-  g1 (Left (a,(x,y))) =undefined
+compressQTree rate tree = undefined
 
 outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
   g1 :: Either (Bool, (Int, Int)) (QTree Bool, (QTree Bool, (QTree Bool, QTree Bool))) -> QTree Bool
