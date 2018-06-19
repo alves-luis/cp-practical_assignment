@@ -1061,17 +1061,21 @@ loop = undefined
 \subsection*{Problema 4}
 
 \begin{code}
-inFTree = undefined
+inFTree (Left b) = Unit b
+inFTree (Right (a,(b,c))) = (Comp a b c)
 outFTree (Unit b) = Left b
-outFTree (Comp a b c) = undefined
-baseFTree = undefined
-recFTree = undefined
-cataFTree = undefined
-anaFTree = undefined
-hyloFTree = undefined
+outFTree (Comp a b c) = Right (a,(b,c))
+baseFTree f g h (Left b) = Left(g b)
+baseFTree f g h (Right (a,(b,c))) = Right (f a,(h b,h c))
+recFTree f (Left b) = Left b
+recFTree f (Right (a,(b,c))) = Right (a,(f b,f c))
+cataFTree a = a . (recFTree (cataFTree a)) . outFTree
+anaFTree f = inFTree . (recFTree (anaFTree f) ) . f
+hyloFTree a c = cataFTree a . anaFTree c
 
 instance Bifunctor FTree where
-    bimap = undefined
+    bmap f g = cataFTree ( inFTree . baseFTree g f id )
+
 
 generatePTree = undefined
 drawPTree = undefined
