@@ -1048,11 +1048,16 @@ invertQTree = cataQTree g where
   g (Left (PixelRGBA8 r g b a,(x,y))) = Cell (PixelRGBA8 (255-r) (255-g) (255-b) a) x y
   g (Right (a,(b,(c,d)))) = Block a b c d
 
-compressQTree rate tree = cataQTree g tree where
-  origSize = depthQTree tree
-  g :: Either (b, (Int,Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
-  g (Left t) = inQTree (Left t)
-  g (Right (a,(b,(c,d)))) = undefined
+compressQTree rate tree = anaQTree g tree where
+  maxSize = depthQTree tree
+  g :: QTree a -> Either (a, (Int,Int)) (QTree a, (QTree a, (QTree a, QTree a)))
+  g (Cell a x y) = outQTree (Cell a x y)
+  g (Block a b c d) = outQTree $ Block (prop a) (prop b) (prop c) (prop d)
+  prop tree = if (depthQTree tree +1) > maxSize - rate then compressQTree (rate+1) tree else tree
+  prune :: QTree a -> QTree a
+  prune (Cell a x y) = Cell a x y
+  prune (Block (Cell a x y) (Cell _ _ _) (Cell _ _ _) (Cell _ _ _)) = Cell a x y
+  prune (Block a b c d) = Block (prune a) (prune b) (prune c) (prune d)
 
 
 outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
@@ -1061,28 +1066,15 @@ outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
   g1 (Right (a,(b,(c,d)))) = Block a b c d
 
   part :: Matrix Bool -> QTree Bool
-  part m = bm2qt $ mapPos (\(r,c) a -> if (r == 1 || r == nrows m) || (c == 1 || c == ncols m) then True else False) m
-
-
+  part m = bm2qt $ mapPos (\(r,c) a -> (r == 1 || r == nrows m) || (c == 1 || c == ncols m)) m
 
 \end{code}
 
 \subsection*{Problema 3}
 
 \begin{code}
-{-f k 0 = 1
-f k d = (l k (d-1)) * (f k (d-1))
-
-l k 0 = k + 1
-l k d = l k (d-1) + 1
-
-l2 k d = cataNat g d where
-  g :: (Either () Integer -> Integer)
-  g (Left d) = k + 1
-  g (Right d) = d + 1
--}
-base k = undefined --split (split one one) (split one (succ k))
-loop = undefined --split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))
+base k = undefined
+loop = undefined
 \end{code}
 
 \subsection*{Problema 4}
@@ -1122,6 +1114,27 @@ drawPTree p = cataFTree g1 p where
 
 \subsection*{Problema 5}
 
+Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag (Bag a)|
+           \ar[d]_-{|muB|}
+&
+    |Bag b|
+           \ar[d]_-{}
+           \ar[l]_-{|Ff|}
+&
+    |[b]|
+          \ar[l]_-{|g|}
+          \ar[lld]_-{|(kcomp (f)(g))|}
+\\
+     |Bag a|
+&
+     |b|
+           \ar[l]^-{|f|}
+}
+\end{eqnarray*}
+
 \begin{code}
 singletonbag = undefined
 muB = undefined
@@ -1156,17 +1169,21 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
 \href{https://ctan.org/pkg/xymatrix}{xymatrix}, por exemplo:
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
-    |Nat0|
-           \ar[d]_-{|cataNat g|}
+    |Bag (Bag a)|
+           \ar[d]_-{|muB|}
 &
-    |1 + Nat0|
-           \ar[d]^{|id + (cataNat g)|}
-           \ar[l]_-{|inNat|}
+    |Bag b|
+           \ar[d]_-{}
+           \ar[l]_-{|Ff|}
+&
+    |[b]|
+          \ar[l]_-{|g|}
+          \ar[lld]_-{|(kcomp (f)(g))|}
 \\
-     |B|
+     |Bag a|
 &
-     |1 + B|
-           \ar[l]^-{|g|}
+     |b|
+           \ar[l]^-{|f|}
 }
 \end{eqnarray*}
 
