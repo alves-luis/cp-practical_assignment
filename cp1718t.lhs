@@ -1047,7 +1047,13 @@ invertQTree = cataQTree g where
   g :: Either (PixelRGBA8, (Int,Int)) (QTree PixelRGBA8, (QTree PixelRGBA8, (QTree PixelRGBA8, QTree PixelRGBA8))) -> QTree PixelRGBA8
   g (Left (PixelRGBA8 r g b a,(x,y))) = Cell (PixelRGBA8 (255-r) (255-g) (255-b) a) x y
   g (Right (a,(b,(c,d)))) = Block a b c d
-compressQTree rate tree = undefined
+
+compressQTree rate tree = cataQTree g tree where
+  origSize = depthQTree tree
+  g :: Either (b, (Int,Int)) (QTree b, (QTree b, (QTree b, QTree b))) -> QTree b
+  g (Left t) = inQTree (Left t)
+  g (Right (a,(b,(c,d)))) = undefined
+
 
 outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
   g1 :: Either (Bool, (Int, Int)) (QTree Bool, (QTree Bool, (QTree Bool, QTree Bool))) -> QTree Bool
@@ -1099,8 +1105,19 @@ instance Bifunctor FTree where
     bimap f g (Comp a b c) = Comp (f a) (bimap f g b) (bimap f g c)
 
 
-generatePTree = undefined
-drawPTree = undefined
+generatePTree n = anaFTree g n where
+  g :: Int -> Either Square (Square,(Int, Int))
+  g 0 = Left 5
+  g l = Right ((sqrt 2)*(either id b (g (l-1))),(l-1,l-1))
+  b :: (Square,(Int,Int)) -> Square
+  b (s,(_,_)) = s
+drawPTree p = cataFTree g1 p where
+  g1 :: Either Square (Square,([Picture],[Picture])) -> [Picture]
+  g1 (Left s) = [rectangleSolid s s]
+  g1 (Right (s,(l1,l2))) = (rectangleSolid s s):rotatePotate l1 s:[rotatePotateTwo l2 s]
+  rotatePotate :: [Picture] -> Square -> Picture
+  rotatePotate l s = Translate 0 s $ Rotate (-60) $ pictures l
+  rotatePotateTwo l s = Translate 0 s $ Rotate 60 $ pictures l
 \end{code}
 
 \subsection*{Problema 5}
