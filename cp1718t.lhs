@@ -1136,9 +1136,21 @@ Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 \end{eqnarray*}
 
 \begin{code}
-singletonbag = undefined
-muB = undefined
-dist = undefined
+
+singletonbag :: a -> Bag a
+singletonbag = B . singl . swap . (,) 1
+
+muB = B . concat . concat . map pairToList . unB . fmap unB
+    where pairToList :: (a, Int) -> [a]
+          pairToList = uncurry replicate . swap
+
+dist (B []) = D []
+dist bag = mkD $ map (id >< getProb) $ unB bag
+      where getProb :: Int -> ProbRep
+            getProb a = (fromIntegral a) / (fromIntegral $ countBag bag)
+            countBag :: Bag a -> Int
+            countBag = (foldr ((+).p2) 0) . unB
+
 \end{code}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
