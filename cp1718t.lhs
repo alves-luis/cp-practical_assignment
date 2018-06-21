@@ -1059,7 +1059,6 @@ compressQTree rate tree = anaQTree g tree where
   prune (Block (Cell a x y) (Cell _ _ _) (Cell _ _ _) (Cell _ _ _)) = Cell a x y
   prune (Block a b c d) = Block (prune a) (prune b) (prune c) (prune d)
 
-
 outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
   g1 :: Either (Bool, (Int, Int)) (QTree Bool, (QTree Bool, (QTree Bool, QTree Bool))) -> QTree Bool
   g1 (Left (a,(x,y))) = if a then part (qt2bm (Cell a x y)) else Cell a x y
