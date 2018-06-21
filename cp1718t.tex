@@ -1514,12 +1514,66 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 3}
 
+Resolução do primeiro passo:
+\begin{eqnarray*}
+\start
+	\ensuremath{\begin{lcbr}(\Varid{f}\;\Varid{k})\comp \mathbf{in}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}\\(\Varid{l}\;\Varid{k})\comp \mathbf{in}\mathrel{=}\alt{\Varid{k}\mathbin{+}\mathrm{1}}{\succ \comp \p2}\end{lcbr}}
+%
+\just\equiv{ Absorção +}
+%
+        \ensuremath{\begin{lcbr}(\Varid{f}\;\Varid{k})\comp \mathbf{in}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\\(\Varid{l}\;\Varid{k})\comp \mathbf{in}\mathrel{=}\alt{\Varid{k}\mathbin{+}\mathrm{1}}{\succ \comp \p2}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
+%
+\just\equiv{ Fokkinga; Lei da troca }
+%
+        \ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\mathrel{=}\cata{\alt{\conj{\mathrm{1}}{\Varid{k}\mathbin{+}\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}}}
+\qed
+\end{eqnarray*}
+
+Resolução do segundo passo:
+
+\begin{eqnarray*}
+\start
+	\ensuremath{\begin{lcbr}\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}\comp \conj{\Varid{g}}{\Varid{s}}}\\\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\mathrm{1}}{\succ }\end{lcbr}}
+%
+\just\equiv{ Absorção + }
+%
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\Varid{one}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\\\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\mathrm{1}}{\succ \comp \p2}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
+%
+\just\equiv{ Fokkinga; Lei da troca }
+%
+        \ensuremath{\conj{\Varid{g}}{\Varid{s}}\mathrel{=}\cata{\alt{\conj{\mathrm{1}}{\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}}}
+\qed
+\end{eqnarray*}
+
+Aplicando banana-split
+
+\begin{eqnarray*}
+\start
+	\ensuremath{\conj{\cata{\alt{\conj{\mathrm{1}}{\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}}}{\cata{\alt{\conj{\mathrm{1}}{\Varid{k}\mathbin{+}\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}}}}
+%
+\just\equiv{ universal property }
+%
+        \ensuremath{\begin{lcbr}\p1\comp \Varid{id}\mathrel{=}\Varid{f}\\\p2\comp \Varid{id}\mathrel{=}\Varid{g}\end{lcbr}}
+%
+\just\equiv{ identity }
+%
+        \ensuremath{\begin{lcbr}\p1\mathrel{=}\Varid{f}\\\p2\mathrel{=}\Varid{g}\end{lcbr}}
+\qed
+\end{eqnarray*}
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{base}\;\Varid{k}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{base}\;\Varid{k}\mathrel{=}(\mathrm{1},\succ \;\Varid{k},\mathrm{1},\mathrm{1}){}\<[E]%
 \\
-\>[B]{}\Varid{loop}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{loop}\mathrel{=}\Varid{pairConcat}\comp (\conj{\Varid{mul}}{\succ \comp \p2}\times\conj{\Varid{mul}}{\succ \comp \p2})\comp \Varid{pairDecat}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{pairConcat}\;((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z}))\mathrel{=}(\Varid{x},\Varid{y},\Varid{w},\Varid{z}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{pairDecat}\;(\Varid{x},\Varid{y},\Varid{w},\Varid{z})\mathrel{=}((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z})){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1603,7 +1657,7 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 5}
 
-Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver
+Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 \begin{eqnarray*}
 \xymatrix@C=2cm{
     \ensuremath{\Conid{Bag}\;(\Conid{Bag}\;\Varid{a})}
@@ -1626,12 +1680,38 @@ Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{singletonbag}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{singletonbag}\mathbin{::}\Varid{a}\to \Conid{Bag}\;\Varid{a}{}\<[E]%
 \\
-\>[B]{}\mu \mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{singletonbag}\mathrel{=}\mathit B\comp \Varid{singl}\comp \Varid{swap}\comp (,)\;\mathrm{1}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\mu \mathrel{=}\mathit B\comp \Varid{concat}\comp \Varid{concat}\comp \map \;\Varid{pairToList}\comp \Varid{unB}\comp \mathsf{fmap}\;\Varid{unB}{}\<[E]%
 \\
-\>[B]{}\Varid{dist}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{pairToList}\mathbin{::}(\Varid{a},\Conid{Int})\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{pairToList}\mathrel{=}\uncurry{\Varid{replicate}}\comp \Varid{swap}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{dist}\;(\mathit B\;[\mskip1.5mu \mskip1.5mu])\mathrel{=}\Conid{D}\;[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{dist}\;\Varid{bag}\mathrel{=}\Varid{mkD}\mathbin{\$}\map \;(\Varid{id}\times\Varid{getProb})\mathbin{\$}\Varid{unB}\;\Varid{bag}{}\<[E]%
+\\
+\>[B]{}\hsindent{7}{}\<[7]%
+\>[7]{}\mathbf{where}\;\Varid{getProb}\mathbin{::}\Conid{Int}\to \Conid{ProbRep}{}\<[E]%
+\\
+\>[7]{}\hsindent{6}{}\<[13]%
+\>[13]{}\Varid{getProb}\;\Varid{a}\mathrel{=}(\Varid{fromIntegral}\;\Varid{a})\mathbin{/}(\Varid{fromIntegral}\mathbin{\$}\Varid{countBag}\;\Varid{bag}){}\<[E]%
+\\
+\>[7]{}\hsindent{6}{}\<[13]%
+\>[13]{}\Varid{countBag}\mathbin{::}\Conid{Bag}\;\Varid{a}\to \Conid{Int}{}\<[E]%
+\\
+\>[7]{}\hsindent{6}{}\<[13]%
+\>[13]{}\Varid{countBag}\mathrel{=}(\Varid{foldr}\;((\mathbin{+})\comp \p2)\;\mathrm{0})\comp \Varid{unB}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
