@@ -1071,9 +1071,80 @@ outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
 
 \subsection*{Problema 3}
 
+Resolução do primeiro passo:
+\begin{eqnarray*}
+\start
+	|lcbr((f k) . in = either (one)  (mul. split (f k) (l k)))(
+  (l k) . in = either (k + 1) (succ.p2)
+  )|
+%
+\just\equiv{ Absorção +}
+%
+        |lcbr(
+		(f k) . in = either one mul . F (split (f k) (l k))
+	)(
+		(l k) . in = either (k + 1) (succ . p2) . F (split (f k) (l k))
+	)|
+%
+\just\equiv{ Fokkinga; Lei da troca }
+%
+        |split (f k) (l k) = cataNat (either (split 1 (k + 1)) (split mul (succ.p2)))|
+\qed
+\end{eqnarray*}
+
+Resolução do segundo passo:
+
+\begin{eqnarray*}
+\start
+	|lcbr(
+  g . in = either one  (mul. split g s)
+  )(
+  s . in = either 1 succ
+  )|
+%
+\just\equiv{ Absorção + }
+%
+        |lcbr(
+		g . in = either one mul . F (split g s)
+	)(
+		s . in = either 1 (succ . p2) . F (split g s)
+	)|
+%
+\just\equiv{ Fokkinga; Lei da troca }
+%
+        |split g s = cataNat (either (split 1 1) (split mul (succ.p2)))|
+\qed
+\end{eqnarray*}
+
+Aplicando banana-split
+
+\begin{eqnarray*}
+\start
+	|split (cataNat (either (split 1 1) (split mul (succ.p2)))) (cataNat(either (split 1 (k+1)) (split mul (succ.p2))))|
+%
+\just\equiv{ Banana split }
+%
+        |lcbr(
+		p1 . id = f
+	)(
+		p2 . id = g
+	)|
+%
+\just\equiv{ identity }
+%
+        |lcbr(
+		p1 = f
+	)(
+		p2 = g
+	)|
+\qed
+\end{eqnarray*}
+
 \begin{code}
-base k = undefined
-loop = undefined
+base k = (1, succ k, 1, 1)
+loop = pairConcat . ((split mul (succ . p2)) >< (split mul (succ . p2))) . pairDecat where
+  pairConcat ((x,y),(w,z)) = (x,y,w,z)
+  pairDecat (x,y,w,z) = ((x,y),(w,z))
 \end{code}
 
 \subsection*{Problema 4}
