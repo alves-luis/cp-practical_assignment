@@ -1188,19 +1188,21 @@ instance Bifunctor FTree where
     bimap f g (Comp a b c) = Comp (f a) (bimap f g b) (bimap f g c)
 
 
-generatePTree n = anaFTree g (100,n) where
+generatePTree n = anaFTree g (10,n) where
   g :: (Float,Int) -> Either Square (Square,((Square,Int), (Float,Int)))
   g (size,0) = Left size
   g (size,l) = Right (size,((newsize,l-1),(newsize,l-1))) where
     newsize = ((sqrt 2)/2)*size
 
-drawPTree p = hyloFTree f g (p,) where
-  g1 :: Either Square (Square,([Picture],[Picture])) -> [Picture]
-  g1 (Left s) = [rectangleSolid s s]
-  g1 (Right (s,(l1,l2))) = (rectangleSolid s s):rotatePotate l1 s:[rotatePotateTwo l2 s]
-  rotatePotate :: [Picture] -> Square -> Picture
-  rotatePotate l s = Translate 0 s $ Rotate (-60) $ pictures l
-  rotatePotateTwo l s = Translate 0 s $ Rotate 60 $ pictures l
+drawPTree p = hyloFTree f g (p,0) where
+  g :: (PTree,Float) -> Either Picture (Picture,((PTree,Float),(PTree,Float)))
+  g (Unit b,y) = Left $ Translate 0 y $ rectangleSolid b b
+  g (Comp a b c,y) = Right $ (Translate 0 y $ rectangleSolid a a,((b,(y+a)),(c,(y+a))))
+  f :: Either Picture (Picture,([Picture],[Picture])) -> [Picture]
+  f (Left p) = [p]
+  f (Right (base,(tl,tr))) = base:pictureLeft:[pictureRight] where
+    pictureLeft = Rotate (-60) $ pictures tl
+    pictureRight = Rotate 60 $ pictures tr
 \end{code}
 
 \subsection*{Problema 5}
