@@ -1396,10 +1396,27 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 2}
 
+Para as 3 primeiras funções, um simples catamorfismo resolve o problema, sendo que
+são necessárias apenas alterações mínimas à QTree.
+
+Nas últimas duas, para o compressQTree optamos por um hilomorfismo cujo anamorfismo
+recebe um par (altura da árvore, árvore) de forma a podermos verificar a altura atual.
+Caso a altura atual seja superior ao compressRate, então pegamos no Block e substituimos
+por uma Cell com as características daquela mais a noroeste e com o tamanho do Block.
+
+De seguida, o catamorfismo limita-se a reconstruir a QTree, sem o par (altura, árvore)
+
+Quanto à outlineQTree, transformamos de imediato a árvore numa QTree Bool, para
+depois analisarmos o tipo de cada Cell. Caso a Cell fosse fundo, então necessitaríamos
+de a partir em vários Blocos, de forma a que apenas as bordas fossem alteradas. Usando
+os anamorfismos qt2bm e bm2qt, operamos sobre a matriz dessa Cell e reconstruimos a árvore
+após alterarmos a matriz nas suas colunas e linhas mais exteriores para True, e as interiores para False.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inQTree}\;(i_1\;(\Varid{a},(\Varid{b},\Varid{c})))\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{b}\;\Varid{c}{}\<[E]%
 \\
@@ -1456,7 +1473,10 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\Varid{invertQTree}\mathrel{=}\Varid{cataQTree}\;\Varid{g}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\mathbin{::}(\Conid{PixelRGBA8},(\Conid{Int},\Conid{Int}))+(\Conid{QTree}\;\Conid{PixelRGBA8},(\Conid{QTree}\;\Conid{PixelRGBA8},(\Conid{QTree}\;\Conid{PixelRGBA8},\Conid{QTree}\;\Conid{PixelRGBA8})))\to \Conid{QTree}\;\Conid{PixelRGBA8}{}\<[E]%
+\>[3]{}\Varid{g}\mathbin{::}(\Conid{PixelRGBA8},(\Conid{Int},\Conid{Int}))+(\Conid{QTree}\;\Conid{PixelRGBA8},(\Conid{QTree}\;\Conid{PixelRGBA8},{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Conid{QTree}\;\Conid{PixelRGBA8},\Conid{QTree}\;\Conid{PixelRGBA8})))\to \Conid{QTree}\;\Conid{PixelRGBA8}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{g}\;(i_1\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a},(\Varid{x},\Varid{y})))\mathrel{=}\Conid{Cell}\;(\Conid{PixelRGBA8}\;(\mathrm{255}\mathbin{-}\Varid{r})\;(\mathrm{255}\mathbin{-}\Varid{g})\;(\mathrm{255}\mathbin{-}\Varid{b})\;\Varid{a})\;\Varid{x}\;\Varid{y}{}\<[E]%
@@ -1467,13 +1487,19 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\Varid{compressQTree}\;\Varid{rate}\;\Varid{tree}\mathrel{=}\Varid{hyloQTree}\;\Varid{f}\;\Varid{g}\;(\Varid{tree},\Varid{depthQTree}\;\Varid{tree})\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\mathbin{::}(\Conid{QTree}\;\Varid{a},\Conid{Int})\to ((\Varid{a},\Conid{Int}),(\Conid{Int},\Conid{Int}))+((\Conid{QTree}\;\Varid{a},\Conid{Int}),((\Conid{QTree}\;\Varid{a},\Conid{Int}),((\Conid{QTree}\;\Varid{a},\Conid{Int}),(\Conid{QTree}\;\Varid{a},\Conid{Int})))){}\<[E]%
+\>[3]{}\Varid{g}\mathbin{::}(\Conid{QTree}\;\Varid{a},\Conid{Int})\to ((\Varid{a},\Conid{Int}),(\Conid{Int},\Conid{Int}))+((\Conid{QTree}\;\Varid{a},\Conid{Int}),((\Conid{QTree}\;\Varid{a},\Conid{Int}),{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}((\Conid{QTree}\;\Varid{a},\Conid{Int}),(\Conid{QTree}\;\Varid{a},\Conid{Int})))){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{g}\;((\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}),\Varid{n})\mathrel{=}i_1\;((\Varid{a},\Varid{n}),(\Varid{x},\Varid{y})){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\;((\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}),\Varid{n})\mathrel{=}\mathbf{if}\;\Varid{n}\mathbin{>}\Varid{rate}\;\mathbf{then}\;i_2\;((\Varid{a},\Varid{n}\mathbin{-}\mathrm{1}),((\Varid{b},\Varid{n}\mathbin{-}\mathrm{1}),((\Varid{c},\Varid{n}\mathbin{-}\mathrm{1}),(\Varid{d},\Varid{n}\mathbin{-}\mathrm{1}))))\;\mathbf{else}\;i_1\;(\Varid{getElem}\;\Varid{a}\;(\Varid{sizeQTree}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}))){}\<[E]%
+\>[3]{}\Varid{g}\;((\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}),\Varid{n})\mathrel{=}\mathbf{if}\;\Varid{n}\mathbin{>}\Varid{rate}\;\mathbf{then}\;i_2\;((\Varid{a},\Varid{n}\mathbin{-}\mathrm{1}),((\Varid{b},\Varid{n}\mathbin{-}\mathrm{1}),((\Varid{c},\Varid{n}\mathbin{-}\mathrm{1}),(\Varid{d},\Varid{n}\mathbin{-}\mathrm{1})))){}\<[E]%
+\\
+\>[3]{}\hsindent{4}{}\<[7]%
+\>[7]{}\mathbf{else}\;i_1\;(\Varid{getElem}\;\Varid{a}\;(\Varid{sizeQTree}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}))){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{getElem}\;(\Conid{Cell}\;\Varid{a}\;\anonymous \;\anonymous )\;(\Varid{acX},\Varid{acY})\mathrel{=}((\Varid{a},\mathrm{0}),(\Varid{acX},\Varid{acY})){}\<[E]%
@@ -1558,10 +1584,15 @@ Aplicando banana-split
 %
 \just\equiv{ Def F p1, F p2; Absorção + }
 %
-  \ensuremath{\cata{\conj{\alt{\conj{\mathrm{1}}{\mathrm{1}}\comp \Varid{id}}{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p1}}{\cdot }}}
+  \ensuremath{\cata{\conj{\alt{\conj{\mathrm{1}}{\mathrm{1}}\comp \Varid{id}}{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p1}}{\alt{\conj{\mathrm{1}}{\Varid{k}\mathbin{+}\mathrm{1}}\comp \Varid{id}}{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p2}}}}
+%
+\just\equiv{ Lei da Troca; Def. X }
+%
+  \ensuremath{\cata{\alt{\conj{\conj{\mathrm{1}}{\Varid{k}\mathbin{+}\mathrm{1}}}{\conj{\mathrm{1}}{\mathrm{1}}}}{\conj{\Varid{mul}}{\succ \comp \p2}\times\conj{\Varid{mul}}{\succ \comp \p2}}}}
 
 \qed
 \end{eqnarray*}
+
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1618,24 +1649,21 @@ Aplicando banana-split
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\Varid{bimap}\;\Varid{f}\;\Varid{g}\;(\Conid{Comp}\;\Varid{a}\;\Varid{b}\;\Varid{c})\mathrel{=}\Conid{Comp}\;(\Varid{f}\;\Varid{a})\;(\Varid{bimap}\;\Varid{f}\;\Varid{g}\;\Varid{b})\;(\Varid{bimap}\;\Varid{f}\;\Varid{g}\;\Varid{c}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{generatePTree}\;\Varid{n}\mathrel{=}\Varid{anaFTree}\;\Varid{g}\;\Varid{n}\;\mathbf{where}{}\<[E]%
+\>[B]{}\Varid{generatePTree}\;\Varid{n}\mathrel{=}\Varid{anaFTree}\;\Varid{g}\;(\mathrm{100},\Varid{n})\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\mathbin{::}\Conid{Int}\to \Conid{Square}+(\Conid{Square},(\Conid{Int},\Conid{Int})){}\<[E]%
+\>[3]{}\Varid{g}\mathbin{::}(\Conid{Float},\Conid{Int})\to \Conid{Square}+(\Conid{Square},((\Conid{Square},\Conid{Int}),(\Conid{Float},\Conid{Int}))){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\;\mathrm{0}\mathrel{=}i_1\;\mathrm{5}{}\<[E]%
+\>[3]{}\Varid{g}\;(\Varid{size},\mathrm{0})\mathrel{=}i_1\;\Varid{size}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\;\Varid{l}\mathrel{=}i_2\;((\Varid{sqrt}\;\mathrm{2})\mathbin{*}\alt{\Varid{id}}{\Varid{b}}\;(\Varid{g}\;(\Varid{l}\mathbin{-}\mathrm{1})),(\Varid{l}\mathbin{-}\mathrm{1},\Varid{l}\mathbin{-}\mathrm{1})){}\<[E]%
+\>[3]{}\Varid{g}\;(\Varid{size},\Varid{l})\mathrel{=}i_2\;(\Varid{size},((\Varid{newsize},\Varid{l}\mathbin{-}\mathrm{1}),(\Varid{newsize},\Varid{l}\mathbin{-}\mathrm{1})))\;\mathbf{where}{}\<[E]%
 \\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{b}\mathbin{::}(\Conid{Square},(\Conid{Int},\Conid{Int}))\to \Conid{Square}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{b}\;(\Varid{s},(\anonymous ,\anonymous ))\mathrel{=}\Varid{s}{}\<[E]%
-\\
-\>[B]{}\Varid{drawPTree}\;\Varid{p}\mathrel{=}\Varid{cataFTree}\;\Varid{g1}\;\Varid{p}\;\mathbf{where}{}\<[E]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{newsize}\mathrel{=}((\Varid{sqrt}\;\mathrm{2})\mathbin{/}\mathrm{2})\mathbin{*}\Varid{size}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{drawPTree}\;\Varid{p}\mathrel{=}\Varid{hyloFTree}\;\Varid{f}\;\Varid{g}\;(\Varid{p},)\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{g1}\mathbin{::}\Conid{Square}+(\Conid{Square},([\mskip1.5mu \Conid{Picture}\mskip1.5mu],[\mskip1.5mu \Conid{Picture}\mskip1.5mu]))\to [\mskip1.5mu \Conid{Picture}\mskip1.5mu]{}\<[E]%
@@ -1682,22 +1710,33 @@ Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{7}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{13}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{singletonbag}\mathbin{::}\Varid{a}\to \Conid{Bag}\;\Varid{a}{}\<[E]%
 \\
 \>[B]{}\Varid{singletonbag}\mathrel{=}\mathit B\comp \Varid{singl}\comp \Varid{swap}\comp (,)\;\mathrm{1}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\mu \mathrel{=}\mathit B\comp \Varid{concat}\comp \Varid{concat}\comp \map \;\Varid{pairToList}\comp \Varid{unB}\comp \mathsf{fmap}\;\Varid{unB}{}\<[E]%
+\>[B]{}\mu \;\Varid{b}\mathrel{=}\Varid{cataList}\;\Varid{g}\;(\Varid{unB}\;(\mathsf{fmap}\;\Varid{unB}\;\Varid{b}))\;\mathbf{where}{}\<[E]%
 \\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;\Varid{pairToList}\mathbin{::}(\Varid{a},\Conid{Int})\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\mathbin{::}()+(([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int}),\Conid{Bag}\;\Varid{a})\to \Conid{Bag}\;\Varid{a}{}\<[E]%
 \\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}\Varid{pairToList}\mathrel{=}\uncurry{\Varid{replicate}}\comp \Varid{swap}{}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_1\;\Varid{x})\mathrel{=}\mathit B\;[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_2\;((\Varid{l},\Varid{n}),\Varid{n2}))\mathrel{=}\mathit B\mathbin{\$}(\Varid{anaList}\;\Varid{f}\;(\Varid{l},\Varid{n}))\plus (\Varid{unB}\;\Varid{n2}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{f}\mathbin{::}([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int})\to ()+((\Varid{a},\Conid{Int}),([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int})){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{f}\;([\mskip1.5mu \mskip1.5mu],\anonymous )\mathrel{=}i_1\;(){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{f}\;(((\Varid{a},\Varid{n})\mathbin{:}\Varid{t}),\Varid{n2})\mathrel{=}i_2\;((\Varid{a},\Varid{n}\mathbin{*}\Varid{n2}),(\Varid{t},\Varid{n2})){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{dist}\;(\mathit B\;[\mskip1.5mu \mskip1.5mu])\mathrel{=}\Conid{D}\;[\mskip1.5mu \mskip1.5mu]{}\<[E]%
 \\

@@ -1018,6 +1018,22 @@ isValidMagicNr bc = length listMagicNo <= length (cataList g2 listMagicNo)  wher
 
 \subsection*{Problema 2}
 
+Para as 3 primeiras funções, um simples catamorfismo resolve o problema, sendo que
+são necessárias apenas alterações mínimas à QTree.
+
+Nas últimas duas, para o compressQTree optamos por um hilomorfismo cujo anamorfismo
+recebe um par (altura da árvore, árvore) de forma a podermos verificar a altura atual.
+Caso a altura atual seja superior ao compressRate, então pegamos no Block e substituimos
+por uma Cell com as características daquela mais a noroeste e com o tamanho do Block.
+
+De seguida, o catamorfismo limita-se a reconstruir a QTree, sem o par (altura, árvore)
+
+Quanto à outlineQTree, transformamos de imediato a árvore numa QTree Bool, para
+depois analisarmos o tipo de cada Cell. Caso a Cell fosse fundo, então necessitaríamos
+de a partir em vários Blocos, de forma a que apenas as bordas fossem alteradas. Usando
+os anamorfismos qt2bm e bm2qt, operamos sobre a matriz dessa Cell e reconstruimos a árvore
+após alterarmos a matriz nas suas colunas e linhas mais exteriores para True, e as interiores para False.
+
 \begin{code}
 inQTree (Left (a,(b,c))) = Cell a b c
 inQTree (Right (a, (b, (c,d)))) = Block a b c d
@@ -1044,14 +1060,17 @@ scaleQTree s t = cataQTree g t where
   g (Left (a,(x,y))) = Cell a (x*s) (y*s)
   g (Right (a,(b,(c,d)))) = Block a b c d
 invertQTree = cataQTree g where
-  g :: Either (PixelRGBA8, (Int,Int)) (QTree PixelRGBA8, (QTree PixelRGBA8, (QTree PixelRGBA8, QTree PixelRGBA8))) -> QTree PixelRGBA8
+  g :: Either (PixelRGBA8, (Int,Int)) (QTree PixelRGBA8, (QTree PixelRGBA8,
+    (QTree PixelRGBA8, QTree PixelRGBA8))) -> QTree PixelRGBA8
   g (Left (PixelRGBA8 r g b a,(x,y))) = Cell (PixelRGBA8 (255-r) (255-g) (255-b) a) x y
   g (Right (a,(b,(c,d)))) = Block a b c d
 
 compressQTree rate tree = hyloQTree f g (tree,depthQTree tree) where
-  g :: (QTree a,Int) -> Either ((a,Int), (Int,Int)) ((QTree a,Int), ((QTree a,Int), ((QTree a,Int), (QTree a,Int))))
+  g :: (QTree a,Int) -> Either ((a,Int), (Int,Int)) ((QTree a,Int), ((QTree a,Int),
+    ((QTree a,Int), (QTree a,Int))))
   g ((Cell a x y),n) = Left ((a,n),(x,y))
-  g ((Block a b c d),n) = if n > rate then Right ((a,n-1),((b,n-1),((c,n-1),(d,n-1)))) else Left (getElem a (sizeQTree (Block a b c d)))
+  g ((Block a b c d),n) = if n > rate then Right ((a,n-1),((b,n-1),((c,n-1),(d,n-1))))
+      else Left (getElem a (sizeQTree (Block a b c d)))
   getElem (Cell a _ _) (acX,acY) = ((a,0),(acX,acY))
   getElem (Block a _ _ _) (x,y) = getElem a (x,y)
   f :: Either ((a,Int), (Int,Int)) (QTree a, (QTree a, (QTree a, QTree a))) -> QTree a
@@ -1132,10 +1151,15 @@ Aplicando banana-split
 %
 \just\equiv{ Def F p1, F p2; Absorção + }
 %
-  |cataNat (split (either ((split 1 1).id) ((split mul (succ.p2)).p1)))|
+  |cataNat (split (either ((split 1 1).id) ((split mul (succ.p2)).p1)) (either ((split 1 (k+1)).id) ((split mul (succ . p2)).p2)))|
+%
+\just\equiv{ Lei da Troca; Def. X }
+%
+  |cataNat (either (split (split 1 (k+1)) (split 1 1)) ((split mul (succ.p2)) >< (split mul (succ.p2))))|
 
 \qed
 \end{eqnarray*}
+
 
 \begin{code}
 base k = (1, succ k, 1, 1)
@@ -1164,13 +1188,13 @@ instance Bifunctor FTree where
     bimap f g (Comp a b c) = Comp (f a) (bimap f g b) (bimap f g c)
 
 
-generatePTree n = anaFTree g n where
-  g :: Int -> Either Square (Square,(Int, Int))
-  g 0 = Left 5
-  g l = Right ((sqrt 2)*(either id b (g (l-1))),(l-1,l-1))
-  b :: (Square,(Int,Int)) -> Square
-  b (s,(_,_)) = s
-drawPTree p = cataFTree g1 p where
+generatePTree n = anaFTree g (100,n) where
+  g :: (Float,Int) -> Either Square (Square,((Square,Int), (Float,Int)))
+  g (size,0) = Left size
+  g (size,l) = Right (size,((newsize,l-1),(newsize,l-1))) where
+    newsize = ((sqrt 2)/2)*size
+
+drawPTree p = hyloFTree f g (p,) where
   g1 :: Either Square (Square,([Picture],[Picture])) -> [Picture]
   g1 (Left s) = [rectangleSolid s s]
   g1 (Right (s,(l1,l2))) = (rectangleSolid s s):rotatePotate l1 s:[rotatePotateTwo l2 s]
@@ -1207,9 +1231,14 @@ Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 singletonbag :: a -> Bag a
 singletonbag = B . singl . swap . (,) 1
 
-muB = B . concat . concat . map pairToList . unB . fmap unB
-    where pairToList :: (a, Int) -> [a]
-          pairToList = uncurry replicate . swap
+muB b = cataList g (unB(fmap unB b)) where
+  g :: Either () (([(a,Int)],Int), Bag a) -> Bag a
+  g (Left x) = B []
+  g (Right ((l,n),n2)) = B $ (anaList f (l,n)) ++ (unB n2)
+  f :: ([(a,Int)],Int) -> Either () ((a,Int),([(a,Int)],Int))
+  f ([],_) = Left ()
+  f (((a,n):t),n2) = Right ((a,n*n2),(t,n2))
+
 
 dist (B []) = D []
 dist bag = mkD $ map (id >< getProb) $ unB bag
