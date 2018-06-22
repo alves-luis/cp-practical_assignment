@@ -1464,34 +1464,31 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{g}\;(i_2\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d}))))\mathrel{=}\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{compressQTree}\;\Varid{rate}\;\Varid{tree}\mathrel{=}\Varid{anaQTree}\;\Varid{g}\;\Varid{tree}\;\mathbf{where}{}\<[E]%
+\>[B]{}\Varid{compressQTree}\;\Varid{rate}\;\Varid{tree}\mathrel{=}\Varid{hyloQTree}\;\Varid{f}\;\Varid{g}\;(\Varid{tree},\Varid{depthQTree}\;\Varid{tree})\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{maxSize}\mathrel{=}\Varid{depthQTree}\;\Varid{tree}{}\<[E]%
+\>[3]{}\Varid{g}\mathbin{::}(\Conid{QTree}\;\Varid{a},\Conid{Int})\to ((\Varid{a},\Conid{Int}),(\Conid{Int},\Conid{Int}))+((\Conid{QTree}\;\Varid{a},\Conid{Int}),((\Conid{QTree}\;\Varid{a},\Conid{Int}),((\Conid{QTree}\;\Varid{a},\Conid{Int}),(\Conid{QTree}\;\Varid{a},\Conid{Int})))){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\mathbin{::}\Conid{QTree}\;\Varid{a}\to (\Varid{a},(\Conid{Int},\Conid{Int}))+(\Conid{QTree}\;\Varid{a},(\Conid{QTree}\;\Varid{a},(\Conid{QTree}\;\Varid{a},\Conid{QTree}\;\Varid{a}))){}\<[E]%
+\>[3]{}\Varid{g}\;((\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}),\Varid{n})\mathrel{=}i_1\;((\Varid{a},\Varid{n}),(\Varid{x},\Varid{y})){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Varid{outQTree}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}){}\<[E]%
+\>[3]{}\Varid{g}\;((\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}),\Varid{n})\mathrel{=}\mathbf{if}\;\Varid{n}\mathbin{>}\Varid{rate}\;\mathbf{then}\;i_2\;((\Varid{a},\Varid{n}\mathbin{-}\mathrm{1}),((\Varid{b},\Varid{n}\mathbin{-}\mathrm{1}),((\Varid{c},\Varid{n}\mathbin{-}\mathrm{1}),(\Varid{d},\Varid{n}\mathbin{-}\mathrm{1}))))\;\mathbf{else}\;i_1\;(\Varid{getElem}\;\Varid{a}\;(\Varid{sizeQTree}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}))){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}\Varid{outQTree}\mathbin{\$}\Conid{Block}\;(\Varid{prop}\;\Varid{a})\;(\Varid{prop}\;\Varid{b})\;(\Varid{prop}\;\Varid{c})\;(\Varid{prop}\;\Varid{d}){}\<[E]%
+\>[3]{}\Varid{getElem}\;(\Conid{Cell}\;\Varid{a}\;\anonymous \;\anonymous )\;(\Varid{acX},\Varid{acY})\mathrel{=}((\Varid{a},\mathrm{0}),(\Varid{acX},\Varid{acY})){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{prop}\;\Varid{tree}\mathrel{=}\mathbf{if}\;(\Varid{depthQTree}\;\Varid{tree}\mathbin{+}\mathrm{1})\mathbin{>}\Varid{maxSize}\mathbin{-}\Varid{rate}\;\mathbf{then}\;\Varid{compressQTree}\;(\Varid{rate}\mathbin{+}\mathrm{1})\;\Varid{tree}\;\mathbf{else}\;\Varid{tree}{}\<[E]%
+\>[3]{}\Varid{getElem}\;(\Conid{Block}\;\Varid{a}\;\anonymous \;\anonymous \;\anonymous )\;(\Varid{x},\Varid{y})\mathrel{=}\Varid{getElem}\;\Varid{a}\;(\Varid{x},\Varid{y}){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{prune}\mathbin{::}\Conid{QTree}\;\Varid{a}\to \Conid{QTree}\;\Varid{a}{}\<[E]%
+\>[3]{}\Varid{f}\mathbin{::}((\Varid{a},\Conid{Int}),(\Conid{Int},\Conid{Int}))+(\Conid{QTree}\;\Varid{a},(\Conid{QTree}\;\Varid{a},(\Conid{QTree}\;\Varid{a},\Conid{QTree}\;\Varid{a})))\to \Conid{QTree}\;\Varid{a}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{prune}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
+\>[3]{}\Varid{f}\;(i_1\;((\Varid{a},\Varid{n}),(\Varid{x},\Varid{y})))\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{prune}\;(\Conid{Block}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\;(\Conid{Cell}\;\anonymous \;\anonymous \;\anonymous )\;(\Conid{Cell}\;\anonymous \;\anonymous \;\anonymous )\;(\Conid{Cell}\;\anonymous \;\anonymous \;\anonymous ))\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{prune}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}\Conid{Block}\;(\Varid{prune}\;\Varid{a})\;(\Varid{prune}\;\Varid{b})\;(\Varid{prune}\;\Varid{c})\;(\Varid{prune}\;\Varid{d}){}\<[E]%
+\>[3]{}\Varid{f}\;(i_2\;\Varid{b})\mathrel{=}\Varid{inQTree}\;(i_2\;\Varid{b}){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{outlineQTree}\;\Varid{f}\;\Varid{tree}\mathrel{=}\Varid{qt2bm}\;(\Varid{cataQTree}\;\Varid{g1}\;(\mathsf{fmap}\;\Varid{f}\;\Varid{tree}))\;\mathbf{where}{}\<[E]%
 \\
@@ -1551,13 +1548,18 @@ Aplicando banana-split
 \start
 	\ensuremath{\conj{\cata{\alt{\conj{\mathrm{1}}{\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}}}{\cata{\alt{\conj{\mathrm{1}}{\Varid{k}\mathbin{+}\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}}}}
 %
-\just\equiv{ universal property }
+\just\equiv{ Banana split }
 %
-        \ensuremath{\begin{lcbr}\p1\comp \Varid{id}\mathrel{=}\Varid{f}\\\p2\comp \Varid{id}\mathrel{=}\Varid{g}\end{lcbr}}
+  \ensuremath{\cata{(\alt{\conj{\mathrm{1}}{\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}\times\alt{\conj{\mathrm{1}}{\Varid{k}\mathbin{+}\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}})\comp \conj{\Conid{F}\;\p1}{\Conid{F}\;\p2}}}
 %
-\just\equiv{ identity }
+\just\equiv{ Absorção X }
 %
-        \ensuremath{\begin{lcbr}\p1\mathrel{=}\Varid{f}\\\p2\mathrel{=}\Varid{g}\end{lcbr}}
+  \ensuremath{\cata{\conj{\alt{\conj{\mathrm{1}}{\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}\comp (\Conid{F}\;\p1)}{\alt{\conj{\mathrm{1}}{\Varid{k}\mathbin{+}\mathrm{1}}}{\conj{\Varid{mul}}{\succ \comp \p2}}\comp (\Conid{F}\;\p2)}}}
+%
+\just\equiv{ Def F p1, F p2; Absorção + }
+%
+  \ensuremath{\cata{\conj{\alt{\conj{\mathrm{1}}{\mathrm{1}}\comp \Varid{id}}{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p1}}{\cdot }}}
+
 \qed
 \end{eqnarray*}
 
