@@ -1048,16 +1048,16 @@ invertQTree = cataQTree g where
   g (Left (PixelRGBA8 r g b a,(x,y))) = Cell (PixelRGBA8 (255-r) (255-g) (255-b) a) x y
   g (Right (a,(b,(c,d)))) = Block a b c d
 
-compressQTree rate tree = anaQTree g tree where
-  maxSize = depthQTree tree
-  g :: QTree a -> Either (a, (Int,Int)) (QTree a, (QTree a, (QTree a, QTree a)))
-  g (Cell a x y) = outQTree (Cell a x y)
-  g (Block a b c d) = outQTree $ Block (prop a) (prop b) (prop c) (prop d)
-  prop tree = if (depthQTree tree +1) > maxSize - rate then compressQTree (rate+1) tree else tree
-  prune :: QTree a -> QTree a
-  prune (Cell a x y) = Cell a x y
-  prune (Block (Cell a x y) (Cell _ _ _) (Cell _ _ _) (Cell _ _ _)) = Cell a x y
-  prune (Block a b c d) = Block (prune a) (prune b) (prune c) (prune d)
+compressQTree rate tree = hyloQTree f g (tree,depthQTree tree) where
+  g :: (QTree a,Int) -> Either ((a,Int), (Int,Int)) ((QTree a,Int), ((QTree a,Int), ((QTree a,Int), (QTree a,Int))))
+  g ((Cell a x y),n) = Left ((a,n),(x,y))
+  g ((Block a b c d),n) = if n > rate then Right ((a,n-1),((b,n-1),((c,n-1),(d,n-1)))) else Left (getElem a (sizeQTree (Block a b c d)))
+  getElem (Cell a _ _) (acX,acY) = ((a,0),(acX,acY))
+  getElem (Block a _ _ _) (x,y) = getElem a (x,y)
+  f :: Either ((a,Int), (Int,Int)) (QTree a, (QTree a, (QTree a, QTree a))) -> QTree a
+  f (Left ((a,n),(x,y))) = Cell a x y
+  f (Right b) = inQTree (Right b)
+
 
 
 outlineQTree f tree = qt2bm (cataQTree g1 (fmap f tree)) where
@@ -1125,19 +1125,16 @@ Aplicando banana-split
 %
 \just\equiv{ Banana split }
 %
-        |lcbr(
-		p1 . id = f
-	)(
-		p2 . id = g
-	)|
+  |cataNat (((either (split 1 1) (split mul (succ.p2))) >< (either (split 1 (k+1)) (split mul (succ.p2)))) . (split (F p1) (F p2)))|
 %
-\just\equiv{ identity }
+\just\equiv{ Absorção X }
 %
-        |lcbr(
-		p1 = f
-	)(
-		p2 = g
-	)|
+  |cataNat (split ((either (split 1 1) (split mul (succ.p2))).(F p1)) ((either (split 1 (k+1)) (split mul (succ.p2))).(F p2)))|
+%
+\just\equiv{ Def F p1, F p2; Absorção + }
+%
+  |cataNat (split (either ((split 1 1).id) ((split mul (succ.p2)).p1)))|
+
 \qed
 \end{eqnarray*}
 
