@@ -973,6 +973,19 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
+Para a primeira questão, limitamo-nos a retirar as transactions patentes em cada bloco
+através de um catamorfismo.
+Quanto à segunda, utilizamos um catamorfismo que, para cada Bloco, retira a informação
+útil de todas as transações e as coloca num ledger dito temporário (através de um catamorfismo sobre
+a lista de transações de cada bloco), já que contém
+entidades repetidas. Por isso, utilizando um sort findo esse catamorfismo, podemos aplicar
+um novo catamorfismo que agrega todas as mudanças de saldo num só par (entidade, saldo), sendo
+que fica assim o ledger bem definido.
+Quanto à terceira e última questão, optamos por devolver o booleano através de uma
+verificação muito simples: comparar o tamanho da lista de números mágicos inicial,
+com o tamanho da lista de número mágicos sem repetidos, sendo que caso o tamanho seja
+diferente, então os números mágicos de uma blockchain não são válidos.
+
 \begin{code}
 inBlockchain = either Bc Bcs
 outBlockchain (Bc b) = Left b
@@ -1188,21 +1201,24 @@ instance Bifunctor FTree where
     bimap f g (Comp a b c) = Comp (f a) (bimap f g b) (bimap f g c)
 
 
-generatePTree n = anaFTree g (10,n) where
-  g :: (Float,Int) -> Either Square (Square,((Square,Int), (Float,Int)))
+generatePTree n = anaFTree g (50,n) where
+  g :: (Float,Int) -> Either Square (Square,((Square,Int), (Square,Int)))
   g (size,0) = Left size
   g (size,l) = Right (size,((newsize,l-1),(newsize,l-1))) where
     newsize = ((sqrt 2)/2)*size
 
-drawPTree p = hyloFTree f g (p,0) where
-  g :: (PTree,Float) -> Either Picture (Picture,((PTree,Float),(PTree,Float)))
-  g (Unit b,y) = Left $ Translate 0 y $ rectangleSolid b b
-  g (Comp a b c,y) = Right $ (Translate 0 y $ rectangleSolid a a,((b,(y+a)),(c,(y+a))))
-  f :: Either Picture (Picture,([Picture],[Picture])) -> [Picture]
-  f (Left p) = [p]
-  f (Right (base,(tl,tr))) = base:pictureLeft:[pictureRight] where
-    pictureLeft = Rotate (-60) $ pictures tl
-    pictureRight = Rotate 60 $ pictures tr
+drawPTree p = hyloFTree f g (p,(0,0)) where
+  g :: (PTree,(Float,Float)) -> Either (Picture,(Float,Float)) (Picture,((PTree,(Float,Float)),(PTree,(Float,Float))))
+  g (Unit b,(x,y)) = Left $ ((Translate x y $ rectangleSolid b b),(x,y))
+  g (Comp a b c,(x,y)) = Right $ (Translate x y $ rectangleSolid a a,((b,(-a/2,a)),(c,(a/2,a)))) where
+
+  f :: Either (Picture,(Float,Float)) (Picture,([Picture],[Picture])) -> [Picture]
+  f (Left (p,(x,y))) | x < 0 = [Rotate 30 p]
+                     | x > 0 = [Rotate (-30) p]
+                     | otherwise = [p]
+  f (Right (base,(tl,tr))) = base:pl:[pr] where
+    pl = Rotate 30 $ pictures tl
+    pr = Rotate (-30) $ pictures tr
 \end{code}
 
 \subsection*{Problema 5}
@@ -1228,6 +1244,18 @@ Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 }
 \end{eqnarray*}
 
+Na resolução da muB, optamos por fazer unBag de todos os Bags presentes no Bag dado, através
+do fmap. Depois, tendo só um Bag, aplicamos um catamorfismo ao unBag desse último Bag. Ora
+esse catamorfismo, cria um novo Bag, sendo que para cada elemento unBagged do Bag original,
+é aplicado um anamorfismo que calcula o número de vezes que cada elemento ocorre na bag e multiplica
+pelo número de vezes que a Bag ocorre na Bag original, sendo depois essa lista concatenada com o unBag
+da lista cujo procedimento já foi efetuado.
+
+Quanto ao dist, primeiro é aplicado um catamorfismo que calcula o número total de elementos na Bag,
+sendo depois esse número passado como par a um anamorfismo que calcula a probabilidade de cada
+elemento ocorrer no bag, dividindo o nº associado a cada elemento do Bag, pelo número total anteriormente
+calculado no catamorfismo e passado como elemento do par.
+
 \begin{code}
 
 singletonbag :: a -> Bag a
@@ -1241,13 +1269,15 @@ muB b = cataList g (unB(fmap unB b)) where
   f ([],_) = Left ()
   f (((a,n):t),n2) = Right ((a,n*n2),(t,n2))
 
+dist bag = D $ anaList f (unB bag,(cataList g $ unB bag)) where
+  g :: (Either () ((a,Int),Int)) -> Int
+  g (Left _) = 0
+  g (Right ((a,n),tot))= n + tot
 
-dist (B []) = D []
-dist bag = mkD $ map (id >< getProb) $ unB bag
-      where getProb :: Int -> ProbRep
-            getProb a = (fromIntegral a) / (fromIntegral $ countBag bag)
-            countBag :: Bag a -> Int
-            countBag = (foldr ((+).p2) 0) . unB
+  f :: ([(a,Int)],Int) -> Either () ((a,ProbRep),([(a,Int)],Int))
+  f ([],_)= Left ()
+  f (((a,local):t),tot)= Right ((a,prob),(t,tot)) where
+    prob = (fromIntegral local) / (fromIntegral tot)
 
 \end{code}
 

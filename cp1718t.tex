@@ -1302,6 +1302,19 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
+Para a primeira questão, limitamo-nos a retirar as transactions patentes em cada bloco
+através de um catamorfismo.
+Quanto à segunda, utilizamos um catamorfismo que, para cada Bloco, retira a informação
+útil de todas as transações e as coloca num ledger dito temporário (através de um catamorfismo sobre
+a lista de transações de cada bloco), já que contém
+entidades repetidas. Por isso, utilizando um sort findo esse catamorfismo, podemos aplicar
+um novo catamorfismo que agrega todas as mudanças de saldo num só par (entidade, saldo), sendo
+que fica assim o ledger bem definido.
+Quanto à terceira e última questão, optamos por devolver o booleano através de uma
+verificação muito simples: comparar o tamanho da lista de números mágicos inicial,
+com o tamanho da lista de número mágicos sem repetidos, sendo que caso o tamanho seja
+diferente, então os números mágicos de uma blockchain não são válidos.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1616,6 +1629,7 @@ Aplicando banana-split
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{27}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inFTree}\;(i_1\;\Varid{b})\mathrel{=}\Conid{Unit}\;\Varid{b}{}\<[E]%
@@ -1649,10 +1663,10 @@ Aplicando banana-split
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\Varid{bimap}\;\Varid{f}\;\Varid{g}\;(\Conid{Comp}\;\Varid{a}\;\Varid{b}\;\Varid{c})\mathrel{=}\Conid{Comp}\;(\Varid{f}\;\Varid{a})\;(\Varid{bimap}\;\Varid{f}\;\Varid{g}\;\Varid{b})\;(\Varid{bimap}\;\Varid{f}\;\Varid{g}\;\Varid{c}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{generatePTree}\;\Varid{n}\mathrel{=}\Varid{anaFTree}\;\Varid{g}\;(\mathrm{100},\Varid{n})\;\mathbf{where}{}\<[E]%
+\>[B]{}\Varid{generatePTree}\;\Varid{n}\mathrel{=}\Varid{anaFTree}\;\Varid{g}\;(\mathrm{50},\Varid{n})\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g}\mathbin{::}(\Conid{Float},\Conid{Int})\to \Conid{Square}+(\Conid{Square},((\Conid{Square},\Conid{Int}),(\Conid{Float},\Conid{Int}))){}\<[E]%
+\>[3]{}\Varid{g}\mathbin{::}(\Conid{Float},\Conid{Int})\to \Conid{Square}+(\Conid{Square},((\Conid{Square},\Conid{Int}),(\Conid{Square},\Conid{Int}))){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{g}\;(\Varid{size},\mathrm{0})\mathrel{=}i_1\;\Varid{size}{}\<[E]%
@@ -1663,25 +1677,37 @@ Aplicando banana-split
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Varid{newsize}\mathrel{=}((\Varid{sqrt}\;\mathrm{2})\mathbin{/}\mathrm{2})\mathbin{*}\Varid{size}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{drawPTree}\;\Varid{p}\mathrel{=}\Varid{hyloFTree}\;\Varid{f}\;\Varid{g}\;(\Varid{p},)\;\mathbf{where}{}\<[E]%
+\>[B]{}\Varid{drawPTree}\;\Varid{p}\mathrel{=}\Varid{hyloFTree}\;\Varid{f}\;\Varid{g}\;(\Varid{p},(\mathrm{0},\mathrm{0}))\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g1}\mathbin{::}\Conid{Square}+(\Conid{Square},([\mskip1.5mu \Conid{Picture}\mskip1.5mu],[\mskip1.5mu \Conid{Picture}\mskip1.5mu]))\to [\mskip1.5mu \Conid{Picture}\mskip1.5mu]{}\<[E]%
+\>[3]{}\Varid{g}\mathbin{::}(\Conid{PTree},(\Conid{Float},\Conid{Float}))\to (\Conid{Picture},(\Conid{Float},\Conid{Float}))+(\Conid{Picture},((\Conid{PTree},(\Conid{Float},\Conid{Float})),(\Conid{PTree},(\Conid{Float},\Conid{Float})))){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g1}\;(i_1\;\Varid{s})\mathrel{=}[\mskip1.5mu \Varid{rectangleSolid}\;\Varid{s}\;\Varid{s}\mskip1.5mu]{}\<[E]%
+\>[3]{}\Varid{g}\;(\Conid{Unit}\;\Varid{b},(\Varid{x},\Varid{y}))\mathrel{=}i_1\mathbin{\$}((\Conid{Translate}\;\Varid{x}\;\Varid{y}\mathbin{\$}\Varid{rectangleSolid}\;\Varid{b}\;\Varid{b}),(\Varid{x},\Varid{y})){}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{g1}\;(i_2\;(\Varid{s},(\Varid{l1},\Varid{l2})))\mathrel{=}(\Varid{rectangleSolid}\;\Varid{s}\;\Varid{s})\mathbin{:}\Varid{rotatePotate}\;\Varid{l1}\;\Varid{s}\mathbin{:}[\mskip1.5mu \Varid{rotatePotateTwo}\;\Varid{l2}\;\Varid{s}\mskip1.5mu]{}\<[E]%
+\>[3]{}\Varid{g}\;(\Conid{Comp}\;\Varid{a}\;\Varid{b}\;\Varid{c},(\Varid{x},\Varid{y}))\mathrel{=}i_2\mathbin{\$}(\Conid{Translate}\;\Varid{x}\;\Varid{y}\mathbin{\$}\Varid{rectangleSolid}\;\Varid{a}\;\Varid{a},((\Varid{b},(\mathbin{-}\Varid{a}\mathbin{/}\mathrm{2},\Varid{a})),(\Varid{c},(\Varid{a}\mathbin{/}\mathrm{2},\Varid{a}))))\;\mathbf{where}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{f}\mathbin{::}(\Conid{Picture},(\Conid{Float},\Conid{Float}))+(\Conid{Picture},([\mskip1.5mu \Conid{Picture}\mskip1.5mu],[\mskip1.5mu \Conid{Picture}\mskip1.5mu]))\to [\mskip1.5mu \Conid{Picture}\mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{rotatePotate}\mathbin{::}[\mskip1.5mu \Conid{Picture}\mskip1.5mu]\to \Conid{Square}\to \Conid{Picture}{}\<[E]%
+\>[3]{}\Varid{f}\;(i_1\;(\Varid{p},(\Varid{x},\Varid{y})))\mid \Varid{x}\mathbin{<}\mathrm{0}\mathrel{=}[\mskip1.5mu \Conid{Rotate}\;\mathrm{30}\;\Varid{p}\mskip1.5mu]{}\<[E]%
+\\
+\>[3]{}\hsindent{19}{}\<[22]%
+\>[22]{}\mid \Varid{x}\mathbin{>}\mathrm{0}\mathrel{=}[\mskip1.5mu \Conid{Rotate}\;(\mathbin{-}\mathrm{30})\;\Varid{p}\mskip1.5mu]{}\<[E]%
+\\
+\>[3]{}\hsindent{19}{}\<[22]%
+\>[22]{}\mid \Varid{otherwise}\mathrel{=}[\mskip1.5mu \Varid{p}\mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{rotatePotate}\;\Varid{l}\;\Varid{s}\mathrel{=}\Conid{Translate}\;\mathrm{0}\;\Varid{s}\mathbin{\$}\Conid{Rotate}\;(\mathbin{-}\mathrm{60})\mathbin{\$}\Varid{pictures}\;\Varid{l}{}\<[E]%
+\>[3]{}\Varid{f}\;(i_2\;(\Varid{base},(\Varid{tl},\Varid{tr})))\mathrel{=}\Varid{base}\mathbin{:}\Varid{pl}\mathbin{:}[\mskip1.5mu \Varid{pr}\mskip1.5mu]\;\mathbf{where}{}\<[E]%
 \\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\Varid{rotatePotateTwo}\;\Varid{l}\;\Varid{s}\mathrel{=}\Conid{Translate}\;\mathrm{0}\;\Varid{s}\mathbin{\$}\Conid{Rotate}\;\mathrm{60}\mathbin{\$}\Varid{pictures}\;\Varid{l}{}\<[E]%
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{pl}\mathrel{=}\Conid{Rotate}\;\mathrm{30}\mathbin{\$}\Varid{pictures}\;\Varid{tl}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{pr}\mathrel{=}\Conid{Rotate}\;(\mathbin{-}\mathrm{30})\mathbin{\$}\Varid{pictures}\;\Varid{tr}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1708,11 +1734,22 @@ Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 }
 \end{eqnarray*}
 
+Na resolução da muB, optamos por fazer unBag de todos os Bags presentes no Bag dado, através
+do fmap. Depois, tendo só um Bag, aplicamos um catamorfismo ao unBag desse último Bag. Ora
+esse catamorfismo, cria um novo Bag, sendo que para cada elemento unBagged do Bag original,
+é aplicado um anamorfismo que calcula o número de vezes que cada elemento ocorre na bag e multiplica
+pelo número de vezes que a Bag ocorre na Bag original, sendo depois essa lista concatenada com o unBag
+da lista cujo procedimento já foi efetuado.
+
+Quanto ao dist, primeiro é aplicado um catamorfismo que calcula o número total de elementos na Bag,
+sendo depois esse número passado como par a um anamorfismo que calcula a probabilidade de cada
+elemento ocorrer no bag, dividindo o nº associado a cada elemento do Bag, pelo número total anteriormente
+calculado no catamorfismo e passado como elemento do par.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{singletonbag}\mathbin{::}\Varid{a}\to \Conid{Bag}\;\Varid{a}{}\<[E]%
 \\
@@ -1738,21 +1775,28 @@ Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{f}\;(((\Varid{a},\Varid{n})\mathbin{:}\Varid{t}),\Varid{n2})\mathrel{=}i_2\;((\Varid{a},\Varid{n}\mathbin{*}\Varid{n2}),(\Varid{t},\Varid{n2})){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{dist}\;(\mathit B\;[\mskip1.5mu \mskip1.5mu])\mathrel{=}\Conid{D}\;[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\>[B]{}\Varid{dist}\;\Varid{bag}\mathrel{=}\Conid{D}\mathbin{\$}\Varid{anaList}\;\Varid{f}\;(\Varid{unB}\;\Varid{bag},(\Varid{cataList}\;\Varid{g}\mathbin{\$}\Varid{unB}\;\Varid{bag}))\;\mathbf{where}{}\<[E]%
 \\
-\>[B]{}\Varid{dist}\;\Varid{bag}\mathrel{=}\Varid{mkD}\mathbin{\$}\map \;(\Varid{id}\times\Varid{getProb})\mathbin{\$}\Varid{unB}\;\Varid{bag}{}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\mathbin{::}(()+((\Varid{a},\Conid{Int}),\Conid{Int}))\to \Conid{Int}{}\<[E]%
 \\
-\>[B]{}\hsindent{7}{}\<[7]%
-\>[7]{}\mathbf{where}\;\Varid{getProb}\mathbin{::}\Conid{Int}\to \Conid{ProbRep}{}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_1\;\anonymous )\mathrel{=}\mathrm{0}{}\<[E]%
 \\
-\>[7]{}\hsindent{6}{}\<[13]%
-\>[13]{}\Varid{getProb}\;\Varid{a}\mathrel{=}(\Varid{fromIntegral}\;\Varid{a})\mathbin{/}(\Varid{fromIntegral}\mathbin{\$}\Varid{countBag}\;\Varid{bag}){}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{g}\;(i_2\;((\Varid{a},\Varid{n}),\Varid{tot}))\mathrel{=}\Varid{n}\mathbin{+}\Varid{tot}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{f}\mathbin{::}([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int})\to ()+((\Varid{a},\Conid{ProbRep}),([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int})){}\<[E]%
 \\
-\>[7]{}\hsindent{6}{}\<[13]%
-\>[13]{}\Varid{countBag}\mathbin{::}\Conid{Bag}\;\Varid{a}\to \Conid{Int}{}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{f}\;([\mskip1.5mu \mskip1.5mu],\anonymous )\mathrel{=}i_1\;(){}\<[E]%
 \\
-\>[7]{}\hsindent{6}{}\<[13]%
-\>[13]{}\Varid{countBag}\mathrel{=}(\Varid{foldr}\;((\mathbin{+})\comp \p2)\;\mathrm{0})\comp \Varid{unB}{}\<[E]%
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{f}\;(((\Varid{a},\Varid{local})\mathbin{:}\Varid{t}),\Varid{tot})\mathrel{=}i_2\;((\Varid{a},\Varid{prob}),(\Varid{t},\Varid{tot}))\;\mathbf{where}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{prob}\mathrel{=}(\Varid{fromIntegral}\;\Varid{local})\mathbin{/}(\Varid{fromIntegral}\;\Varid{tot}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
