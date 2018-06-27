@@ -1084,8 +1084,10 @@ compressQTree rate tree = hyloQTree f g (tree,depthQTree tree) where
   g ((Cell a x y),n) = Left ((a,n),(x,y))
   g ((Block a b c d),n) = if n > rate then Right ((a,n-1),((b,n-1),((c,n-1),(d,n-1))))
       else Left (getElem a (sizeQTree (Block a b c d)))
+
   getElem (Cell a _ _) (acX,acY) = ((a,0),(acX,acY))
   getElem (Block a _ _ _) (x,y) = getElem a (x,y)
+
   f :: Either ((a,Int), (Int,Int)) (QTree a, (QTree a, (QTree a, QTree a))) -> QTree a
   f (Left ((a,n),(x,y))) = Cell a x y
   f (Right b) = inQTree (Right b)
@@ -1183,6 +1185,7 @@ loop = pairConcat . ((split mul (succ . p2)) >< (split mul (succ . p2))) . pairD
 
 \subsection*{Problema 4}
 
+
 \begin{code}
 inFTree (Left b) = Unit b
 inFTree (Right (a,(b,c))) = (Comp a b c)
@@ -1205,25 +1208,28 @@ generatePTree n = anaFTree g (50,n) where
   g :: (Float,Int) -> Either Square (Square,((Square,Int), (Square,Int)))
   g (size,0) = Left size
   g (size,l) = Right (size,((newsize,l-1),(newsize,l-1))) where
-    newsize = ((sqrt 2)/2)*size
+    newsize = ((sqrt 2 / 2)*size)
 
 drawPTree p = hyloFTree f g (p,(0,0)) where
-  g :: (PTree,(Float,Float)) -> Either (Picture,(Float,Float)) (Picture,((PTree,(Float,Float)),(PTree,(Float,Float))))
+  g :: (PTree,(Float,Float)) -> Either (Picture,(Float,Float))
+    (Picture,((PTree,(Float,Float)),(PTree,(Float,Float))))
   g (Unit b,(x,y)) = Left $ ((Translate x y $ rectangleSolid b b),(x,y))
-  g (Comp a b c,(x,y)) = Right $ (Translate x y $ rectangleSolid a a,((b,(-a/2,a)),(c,(a/2,a)))) where
+  g (Comp a b c,(x,y)) = Right $ (Translate x y $
+    rectangleSolid a a,((b,(x-(a/2),y + a)),(c,(x + (a/2),y + a)))) where
 
   f :: Either (Picture,(Float,Float)) (Picture,([Picture],[Picture])) -> [Picture]
-  f (Left (p,(x,y))) | x < 0 = [Rotate 30 p]
-                     | x > 0 = [Rotate (-30) p]
-                     | otherwise = [p]
-  f (Right (base,(tl,tr))) = base:pl:[pr] where
-    pl = Rotate 30 $ pictures tl
-    pr = Rotate (-30) $ pictures tr
+  f (Left (p,(x,y))) = [p]
+  f (Right (base,(tl,tr))) = base:anaList ana (tl,tr) where
+
+  ana :: ([Picture],[Picture]) -> Either () (Picture,([Picture],[Picture]))
+  ana ([],[]) = Left ()
+  ana ((h1:t1),(h2:t2)) = Right (pictures (Rotate (-45) h1:[Rotate (45) h2]),(t1,t2))
+
 \end{code}
 
 \subsection*{Problema 5}
 
-Este esquema ajudou na perceção dos tipos que necessitaríamos de desenvolver.
+Este diagrama ajudou na perceção dos tipos que necessitaríamos de desenvolver.
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |Bag (Bag a)|
